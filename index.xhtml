@@ -76,6 +76,101 @@
         </data>
       </xf:instance>
 
+      <xf:submission
+        id="auth-one"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/auth-one"
+        targetref="status/response">
+        <xf:action
+          ev:event="xforms-submit">
+          <xf:setvalue ref="instance('login')/login/pw" value="../pass"/>
+        </xf:action>
+        <xf:action
+          ev:event="xforms-submit-done">
+          <xf:setvalue ref="instance('login')/login/pw" value="digest(
+              concat(.,
+                digest(
+                  instance('result')/status/response, 'MD5', 'hex'
+                )
+              ), 'MD5', 'hex'
+            )"/>
+          <xf:send
+            submission="auth-two"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
+        id="auth-two"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/auth-two"
+        targetref="status/response">
+        <xf:header
+          combine="append">
+          <xf:name>Authorization</xf:name>
+          <xf:value
+            value="concat('Digest ', instance('login')/login/pw)"/>
+        </xf:header>
+      </xf:submission>
+
+      <xf:submission
+        id="genid"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="none"
+        resource="/genid"/>
+
+      <xf:submission
+        id="test"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/main/test/0"
+        targetref="status/response"/>
+
+      <xf:submission
+        id="logout"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/logout"
+        targetref="status/response"/>
+
+      <xf:action
+        ev:event="xforms-ready">
+        <xf:send
+          submission="genid"/>
+      </xf:action>
+
+      <xf:bind
+        calculate="choose(
+          not(
+            normalize-space(.)
+          ),
+          '',
+          digest(
+            concat(
+              ../user, ':BaseX:', .
+            ), 'MD5', 'hex'
+          )
+        )"
+        id="pass-binding"
+        readonly="false()"
+        ref="instance('login')/login/pass"/>
+
       <xf:bind
         ref="/groceries/list/">
         <xf:bind
