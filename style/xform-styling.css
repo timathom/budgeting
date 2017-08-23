@@ -1,0 +1,479 @@
+    .section { 
+        margin-top: 30px; 
+    }
+    
+    /* .btn {
+        background: inherit;         
+        background-color: #fff;
+        border-color: #ccc;
+        color: #333;  
+    }*/
+    
+    button { 
+        background: inherit; 
+        border: 1px;         
+        font-size: inherit;
+        background-color: inherit;
+        border-color: inherit;
+        color: inherit;        
+    }
+    
+    select {
+        margin: inherit;
+        margin-left: 1%;
+        color: inherit;
+    }
+ 
+    label {
+        /*margin-top: 10px;
+        margin-bottom: 5px;
+        background: inherit; 
+        border: 1px;   */      
+        font-size: larger !important;
+        /*background-color: inherit;
+        border-color: inherit;
+        color: inherit;*/    
+    }
+    
+    label.question {
+        font-size: 1.1em;
+    }
+    
+    .label-large {
+        font-size: 30px;
+    }
+    
+    .form-section {
+        width: 500px;
+    }
+    
+    .form-section-text {
+        width: 490px;
+    }
+    
+    .form-section-wide {
+        min-width: 500px;
+        max-width: 700px;
+    }
+    
+    .form-section-wide-text {
+        min-width: 490px;
+        max-width: 690px;
+    }
+    
+    textarea {
+        width: 80%;
+        height: 50px;
+    }
+    
+    .xforms-textarea label{
+        display: block;
+        margin-top: 1%;
+    }
+    
+    .page-control {
+        margin-top: 50px;
+    }
+    
+    .xforms-item-label {
+       /* margin-left: 10px;*/
+    }
+    
+    .rhs {
+        float: right;
+        text-align: right;
+    }
+    
+    .letter {
+        width: 500px;
+        margin-bottom: 50px;
+    }
+    
+    .letter-body {
+        margin-top: 40px;
+        clear: both;
+        text-align: justify;
+    }
+    
+    .reference-number {
+        margin-left: 50px;
+        width: 400px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    
+    .letter-logo {
+        margin-bottom: 20px;
+    }
+    
+    .line {
+        display: block;
+        text-align: inherit;
+    }
+    
+    .pre-space {
+        margin-top: 7px;
+    }
+    
+    .small-pre-space {
+        margin-top: 3px;
+    }
+    
+    .guidance {
+    }
+    
+    .subtle {
+        color: #aaa;
+    }
+/*    
+    
+.xforms-invalid input,
+.xforms-invalid select,
+.xforms-invalid textarea {
+  color: #df382c;
+}
+
+.xforms-invalid input,
+.xforms-invalid select,
+.xforms-invalid textarea {
+  border-color: #df382c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.xforms-invalid input:focus,
+.xforms-invalid select:focus,
+.xforms-invalid textarea:focus {
+  border-color: #bc271c;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ec8c85;
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ec8c85;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #ec8c85;
+}*/
+
+button.aid-button {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #da4f49;
+  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+  border-color: #bd362f #bd362f #802420;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #bd362f;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+
+.input-append .add-on,
+.input-append button.aid-button {
+  margin-left: -1px;
+  width: 30px;
+  height: 30px;
+}
+.input-append .add-on:last-child,
+.input-append button.aid-button:last-child {
+  -webkit-border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0;
+}
+
+
+
+.xforms-invalid .input-prepend .add-on,
+.xforms-invalid .input-append .add-on {
+  color: #df382c;
+  background-color: #fadfdd;
+  border-color: #df382c;
+}
+
+.xforms-alert-icon {
+    /*display: none;*/
+    margin-left: 5px;
+}
+
+.xforms-invalid .xforms-alert-value {
+	/*width: inherit;
+	position: inherit;
+	display: inline;
+	border: 0px;
+	background: inherit;	
+	margin-left: 10px;
+	color: #df382c;
+	border: 1px solid black;*/
+	color: inherit;
+	z-index: 5000;
+	width: inherit;
+}
+
+.xforms-hint-value{
+    color: inherit;
+	z-index: 5000;
+	width: inherit;
+}
+.alert-hint {
+        
+	/*background: #f5f5f5;
+	border-color: #ddd;
+	color: #999;*/
+}
+
+.question-narrative {
+	font-size: 0.9em;
+	font-family: "Gills Sans";
+	color: #999;
+	padding-top: 10px;
+}
+
+body{
+    
+    font-size: 1.5em;
+}
+.container{
+
+}
+.form-body{
+
+}
+.styling{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+/*label{
+    margin: 1%;
+}*/
+
+
+
+input[type = text],
+input[type = password],
+textarea{
+    width: 90%;
+    padding: 4px 4px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+input[type = text]:focus,
+input[type = password]:focus,
+select:focus{
+    border: 1px solid blue;
+}
+input[type = checkbox]{
+    width: 20px;
+    height: 20px;
+}
+input,
+select,
+textarea{
+    color: black !important;
+}
+
+td{
+    vertical-align: bottom !important;
+}
+.btn{
+    margin: 4px 0;
+    padding: 4px;
+    display: table;    
+}
+.left-half,
+.right-half{
+    display: inline-block;
+    width: 50%;
+}
+.left-half{
+    padding-right: 1%;
+}
+.right-half{
+    padding-left: 1%;
+}
+.narrow{
+    padding-right: 4px;
+}
+.narrow input{
+    width: auto !important;
+}
+.narrow label{
+    font-size: inherit;
+}
+.xforms-readonly input{
+    background-color: gainsboro;
+    border: solid black 1px;
+}
+.position{
+    font-size: larger;
+    font-weight: 600;
+}
+.group-label{
+    font-size: larger;
+    font-weight: 600;
+}
+/*.inline-group{
+    display: inline;
+}
+.inline-group div{
+    display: inherit;
+}*/
+.small-label{
+    font-weight: 600;
+}
+.xforms-group{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#save-current{
+    position: fixed;
+    top: 200px;
+    right: 50px;
+}
+#status-saving{
+    position: fixed;
+    top: 250px;
+    right: 60px;
+    font-weight: 600;
+    font-size: larger;
+}
+.integer input{
+    width: 3em !important;
+}
+.small-input input{
+    width: 8em !important;
+}
+.table-display{
+    display: table;
+}
+.control-label{
+      
+    margin-right: 1%;
+    
+    padding: 0 !important;
+    text-align: right;
+    
+}
+.conditional-label{
+    margin-left: 1%;
+    
+}
+.side-panel{
+    /*border-right: 1px double black;*/ 
+    
+}
+.wide-cell{
+    width: 99%;
+}
+.button-cell{
+    
+}
+.btn-group span.xforms-alert{
+display: none;
+    
+}
+.btn-group span.xforms-required-icon{
+display: none;
+    
+
+}
+.wide input{
+    width: 80% !important;
+}
+.xforms-group-content table{
+    background-color: inherit !important;
+    
+}
+
+.xforms-appearance-minimal a:link{
+    color: black;
+}
+
+.xforms-appearance-minimal a:visited{
+    color: darkgray;
+}
+
+.xforms-appearance-minimal a:hover{
+    color: gray;
+}
+
+.xforms-appearance-minimal a:active{
+    color: gray;
+}
+.list-label{
+        
+    float: right;
+    display: inline-block;
+        
+}
+.list-check{
+    display: block;
+    float: left;
+    clear: both;  
+}
+
+.list-check input{
+    margin: 5px;
+}
+.list-btn{
+    display: inline-block;
+    margin-left: 2%;
+        
+}
+
+.item-price input {
+    text-align: left !important;
+}
+
+.item-quantity input {
+    text-align: left !important;
+  
+}
+
+.btn-save{
+   
+    
+}
+/* 
+#footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:80px;
+   width:100%;
+   
+   overflow: hidden;
+   padding: 0 !important;
+}
+*/
+
+#footer{
+    height: 60px;
+}
+.container{
+  
+  
+}
+
+.form-title{
+  text-align: center;   
+}
+
+.btn-secondary{
+  border-color: black;
+}
+
+.xforms-hint{
+  margin: 5px;
+  
+  
+}
+.xforms-label{
+  display: block;
+}
