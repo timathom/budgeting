@@ -103,7 +103,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/auth-one"
+        resource="/basex/auth-one"
         targetref="status/response">
         <xf:action
           ev:event="xforms-submit">
@@ -130,7 +130,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/auth-two"
+        resource="/basex/auth-two"
         targetref="status/response">
         <xf:header
           combine="append">
@@ -147,7 +147,7 @@
         mode="asynchronous"
         ref=""
         replace="none"
-        resource="/genid"/>
+        resource="/basex/genid"/>
 
       <xf:submission
         id="test"
@@ -156,7 +156,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/main/test/0"
+        resource="/basex/main/test/0"
         targetref="status/response"/>
 
       <xf:submission
@@ -166,7 +166,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/logout"
+        resource="/basex/logout"
         targetref="status/response"/>
 
       <xf:action
