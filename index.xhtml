@@ -77,7 +77,7 @@
       </xf:instance>
 
       <xf:bind
-        ref="/groceries/list/">
+        ref="groceries/list/">
         <xf:bind
           ref="item/@checked"
           type="xs:boolean"/>
@@ -115,7 +115,7 @@
 
           <!-- Switch views for budget field -->
           <xf:switch
-            ref="/groceries">
+            ref="groceries">
 
             <!-- Enter value for budget -->
             <xf:case
@@ -157,7 +157,7 @@
           <h3>
             <span>Total: </span>
             <xf:output
-              value="concat(currency, format-number(sum(//item/@subtotal), '.00'))"/>
+              value="concat(groceries/currency, format-number(sum(//item/@subtotal), '.00'))"/>
           </h3>
 
           <hr />
@@ -165,7 +165,7 @@
           <!-- Start list -->
           <xf:repeat
             id="groceries-repeat"
-            ref="/groceries/list/item">
+            ref="groceries/list/item">
 
             <!-- Edit list item -->
             <xf:group
@@ -280,7 +280,7 @@
                 at="last()"
                 origin="instance('proto')/item"
                 position="after"
-                ref="/groceries/list/item"/>
+                ref="groceries/list/item"/>
             </xf:action>
           </xf:trigger>
         </div>
