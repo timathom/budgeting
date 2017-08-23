@@ -21,20 +21,23 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
       rel="stylesheet" />
 
-    <!-- Optional theme -->
+    <!-- Optional Bootstrap theme -->
     <link
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
       rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link
-      href="style/xform-styling.css"
+      href="style/local.css"
       rel="stylesheet" />
+
+    <!-- Scale for mobile -->
     <meta
       content="width=device-width, initial-scale=1"
       name="viewport"
       user-scalable="no" />
 
-    <xf:model
-      id="budget-model">
+    <xf:model>
 
       <xf:instance
         id="login">
@@ -75,6 +78,7 @@
                 quantity="1"
                 subtotal="0"/>
             </list>
+            <currency>$</currency>
             <budget>0.00</budget>
             <total>0.00</total>
           </groceries>
@@ -173,7 +177,6 @@
         ev:event="xforms-ready">
         <xf:send
           submission="genid"/>
-
       </xf:action>
 
       <xf:bind
@@ -216,11 +219,10 @@
       </xf:bind>
 
     </xf:model>
-
   </head>
   <body>
     <div
-      class="container-fluid theme-showcase">
+      class="container-fluid">
 
       <!-- Start login block -->
       <div
@@ -268,6 +270,8 @@
 
                     <!-- Clear password field -->
                     <xf:setvalue ref="pass" value="''"/>
+
+                    <!-- Hide login -->
                     <xf:toggle
                       case="hide-login"/>
                   </xf:action>
@@ -294,8 +298,6 @@
               </xf:case>
             </xf:switch>
           </xf:group>
-
-          <!-- End login group -->
         </div>
 
         <!-- End login block -->
@@ -338,7 +340,7 @@
               <xf:case
                 id="calc-budget">
                 <xf:output
-                  value="concat('Budget: $', format-number(budget - sum(.//item/@subtotal), '.00'), ' ')"/>
+                  value="concat('Budget: ', currency, format-number(budget - sum(.//item/@subtotal), '.00'), ' ')"/>
 
                 <!-- Edit value for budget -->
                 <xf:trigger
@@ -351,7 +353,6 @@
               </xf:case>
             </xf:switch>
 
-
             <!-- Calculate total spent -->
             <h3>
               <span>Total: </span>
@@ -363,12 +364,12 @@
 
             <!-- Start list -->
             <xf:repeat
-              id="grocery-rpt"
+              id="groceries-repeat"
               ref="instance('groceries')/groceries/list/item">
 
               <!-- Edit list item -->
               <xf:group
-                ref=".[@checked = 'false']">
+                ref=".[not(boolean-from-string(@checked))]">
 
                 <!-- Set item label -->
                 <xf:input
@@ -377,7 +378,6 @@
                   <xf:hint>Short, descriptive name of an item to be
                     purchased</xf:hint>
                 </xf:input>
-
 
                 <!-- Input price -->
                 <xf:input
@@ -397,7 +397,7 @@
                   <xf:hint>Count or weight of item(s) to be purchased</xf:hint>
                 </xf:input>
 
-                <!-- Calculate item subtotal (from model binding) -->
+                <!-- Calculate item subtotal (in model binding) -->
                 <xf:input
                   ref="@subtotal">
                   <xf:label>Total</xf:label>
@@ -409,7 +409,9 @@
                   <xf:label>Save</xf:label>
                   <xf:action
                     ev:event="DOMActivate">
-                    <xf:setvalue ref="current()/@checked" value="true()"/>
+                    <xf:setvalue 
+                      ref="current()/@checked" 
+                      value="true()"/>
                   </xf:action>
                 </xf:trigger>
 
@@ -429,23 +431,25 @@
 
               <!-- Display item label and subtotal -->
               <xf:group
-                ref=".[@checked = 'true']">
+                ref=".[boolean-from-string(@checked)]">
 
                 <!-- Check box selected -->
                 <xf:input
-                  class="list-check"
+                  class="list-checkbox"
                   incremental="true"
                   ref="@checked">
                   <xf:label
                     class="list-label">
                     <xf:output
-                      value="concat(../@label, ': ', ../@subtotal)"/>
+                      value="concat(../@label, ': ', ../../../currency, format-number(../@subtotal, '.00'))"/>
                   </xf:label>
 
                   <!-- Checkbox deselected -->
                   <xf:action
                     ev:event="xforms-value-changed">
-                    <xf:setvalue ref="context()" value="choose(. = 'true', 'true', 'false')"/>
+                    <xf:setvalue 
+                      ref="context()" 
+                      value="choose(. = 'true', 'true', 'false')"/>
                   </xf:action>
                 </xf:input>
               </xf:group>
@@ -458,10 +462,10 @@
             <!-- End list -->
 
           </xf:group>
-
-          <!-- End app group -->
         </div>
       </div>
+
+      <!-- End app group -->
 
       <!-- Footer -->
       <div
@@ -487,6 +491,9 @@
           </xf:trigger>
         </div>
       </div>
+
+      <!-- End footer -->
+
     </div>
     <!-- Latest compiled and minified jQuery JavaScript -->
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
