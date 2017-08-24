@@ -39,6 +39,29 @@
     <xf:model>
 
       <xf:instance
+        id="groceries">
+        <data
+          xmlns="">
+          <groceries
+            active="false">
+            <list>
+              <item
+                check="false"
+                checked="false"
+                edit="true"
+                label=""
+                price="0"
+                quantity="1"
+                subtotal="0"/>
+            </list>
+            <currency>$</currency>
+            <budget>0.00</budget>
+            <total>0.00</total>
+          </groceries>
+        </data>
+      </xf:instance>
+
+      <xf:instance
         id="login">
         <data
           xmlns="">
@@ -58,28 +81,6 @@
             <response/>
             <loggedin/>
           </status>
-        </data>
-      </xf:instance>
-
-      <xf:instance>
-        <data
-          xmlns="">
-          <groceries
-            active="true">
-            <list>
-              <item
-                check="false"
-                checked="false"
-                edit="true"
-                label=""
-                price="0"
-                quantity="1"
-                subtotal="0"/>
-            </list>
-            <currency>$</currency>
-            <budget>0.00</budget>
-            <total>0.00</total>
-          </groceries>
         </data>
       </xf:instance>
 
@@ -222,91 +223,99 @@
     <div
       class="container-fluid">
 
+      <div
+        class="row">
+        <div
+          class="col-xs-12 col-md-2 form-group">
+
+          <!-- Start login group -->
+          <xf:group
+            ref="instance('login')/login">
+            <xf:switch>
+
+              <!-- Show login form -->
+              <xf:case
+                id="show-login">
+
+                <!-- Username -->
+                <xf:input
+                  ref="user">
+                  <xf:label>Username</xf:label>
+                </xf:input>
+
+                <!-- Password -->
+                <xf:secret
+                  bind="pass-binding"
+                  id="pw1">
+                  <xf:label>Password</xf:label>
+                </xf:secret>
+
+                <!-- Submit credentials -->
+                <xf:trigger
+                  class="btn btn-secondary btn-sm"
+                  id="t1">
+                  <xf:label>OK</xf:label>
+                  <xf:action
+                    ev:event="DOMActivate">
+
+                    <!-- Toggle focus to ensure form input has been updated -->
+                    <xf:setfocus
+                      control="pw1"/>
+                    <xf:setfocus
+                      control="t1"/>
+                    <xf:send
+                      submission="auth-one"/>
+
+                    <!-- Clear password field -->
+                    <xf:setvalue ref="pass" value="''"/>
+
+                    <!-- Hide login -->
+                    <xf:toggle
+                      case="hide-login"/>
+
+                    <!-- Show form -->
+                    <xf:setvalue ref="instance('groceries')/groceries/@active" value="true()"/>
+                  </xf:action>
+                </xf:trigger>
+              </xf:case>
+
+              <!-- Hide login form -->
+              <xf:case
+                id="hide-login">
+
+                <!-- Log out -->
+                <xf:trigger
+                  appearance="minimal"
+                  class="btn btn-secondary btn-sm">
+                  <xf:label>Log out</xf:label>
+                  <xf:action
+                    ev:event="DOMActivate">
+                    <xf:send
+                      submission="logout"/>
+                    <xf:toggle
+                      case="show-login"/>
+
+                    <!-- Hide form -->
+                    <xf:setvalue ref="instance('groceries')/groceries/@active" value="false()"/>
+                  </xf:action>
+                </xf:trigger>
+              </xf:case>
+            </xf:switch>
+          </xf:group>
+        </div>
+      </div>
+      <!-- End login block -->
+
       <!-- Set context -->
       <xf:group
-        ref="groceries">
+        ref="groceries[boolean-from-string(@active)]">
 
-        <!-- Start app block -->
+        <!-- Begin app block -->
+
         <div
           class="row">
           <div
-            class="col-xs-12 col-md-2 form-group">
-
-            <!-- Start login group -->
-            <xf:group
-              ref="instance('login')/login">
-              <xf:switch>
-
-                <!-- Show login form -->
-                <xf:case
-                  id="show-login">
-
-                  <!-- Username -->
-                  <xf:input
-                    ref="user">
-                    <xf:label>Username</xf:label>
-                  </xf:input>
-
-                  <!-- Password -->
-                  <xf:secret
-                    bind="pass-binding"
-                    id="pw1">
-                    <xf:label>Password</xf:label>
-                  </xf:secret>
-
-                  <!-- Submit credentials -->
-                  <xf:trigger
-                    class="btn btn-secondary btn-sm"
-                    id="t1">
-                    <xf:label>OK</xf:label>
-                    <xf:action
-                      ev:event="DOMActivate">
-
-                      <!-- Toggle focus to ensure form input has been updated -->
-                      <xf:setfocus
-                        control="pw1"/>
-                      <xf:setfocus
-                        control="t1"/>
-                      <xf:send
-                        submission="auth-one"/>
-
-                      <!-- Clear password field -->
-                      <xf:setvalue ref="pass" value="''"/>
-
-                      <!-- Hide login -->
-                      <xf:toggle
-                        case="hide-login"/>
-                    </xf:action>
-                  </xf:trigger>
-                </xf:case>
-
-                <!-- Hide login form -->
-                <xf:case
-                  id="hide-login">
-
-                  <!-- Log out -->
-                  <xf:trigger
-                    appearance="minimal"
-                    class="btn btn-secondary btn-sm">
-                    <xf:label>Log out</xf:label>
-                    <xf:action
-                      ev:event="DOMActivate">
-                      <xf:send
-                        submission="logout"/>
-                      <xf:toggle
-                        case="show-login"/>
-                    </xf:action>
-                  </xf:trigger>
-                </xf:case>
-              </xf:switch>
-            </xf:group>
-          </div>
-
-          <!-- End login block -->
-
-          <!-- Begin app block -->
-          <div
-            class="col-xs-12 col-md-2 form-group">
+            class="col-xs-12 col-md-12 form-group">
             <h2
               class="form-title">XForms Grocery List</h2>
 
@@ -457,6 +466,7 @@
 
           </div>
         </div>
+
 
         <!-- End app group -->
 

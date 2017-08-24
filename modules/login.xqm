@@ -35,7 +35,7 @@ function budget:auth-two(
   $auth as item()
 ) {
   let $auth2 := substring-after($auth, "Digest ")
-  let $user := doc("../../data/users.xml")//hash[lower-case(
+  let $user := doc("../../../data/users.xml")//hash[lower-case(
     xs:string(
       xs:hexBinary(
         hash:md5(
