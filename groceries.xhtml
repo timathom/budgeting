@@ -33,9 +33,8 @@
 
     <!-- Scale for mobile -->
     <meta
-      content="width=device-width, initial-scale=1"
-      name="viewport"
-      user-scalable="no" />
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+      name="viewport" />
 
     <xf:model>
 
@@ -117,8 +116,6 @@
             <h2
               class="form-title">XForms Grocery List</h2>
 
-
-
             <!-- Switch views for budget field -->
             <xf:switch>
 
@@ -135,9 +132,11 @@
                 <xf:trigger
                   class="btn btn-primary btn-sm">
                   <xf:label>Set</xf:label>
+                  
                   <xf:toggle
                     case="calc-budget"
                     ev:event="DOMActivate"/>
+                    
                 </xf:trigger>
               </xf:case>
 
@@ -151,9 +150,11 @@
                 <xf:trigger
                   class="btn btn-secondary btn-sm">
                   <xf:label>Edit</xf:label>
+                  
                   <xf:toggle
                     case="set-budget"
                     ev:event="DOMActivate"/>
+                    
                 </xf:trigger>
               </xf:case>
             </xf:switch>
@@ -210,12 +211,14 @@
 
                 <!-- Save item -->
                 <xf:trigger
-                  class="btn btn-secondary btn-sm">
+                  class="btn btn-secondary btn-lg">
                   <xf:label>Save</xf:label>
-                  <xf:action
-                    ev:event="DOMActivate">
-                    <xf:setvalue ref="current()/@checked" value="true()"/>
-                  </xf:action>
+                  
+                  <xf:setvalue 
+                    ev:event="DOMActivate" 
+                    ref="current()/@checked" 
+                    value="true()"/>
+                    
                 </xf:trigger>
 
                 <!-- Delete item -->
@@ -223,19 +226,19 @@
                   class="btn btn-secondary btn-sm"
                   ref=".[count(preceding-sibling::*) &gt; 0]">
                   <xf:label>&#x2796;</xf:label>
-                  <xf:action
-                    ev:event="DOMActivate">
-                    <xf:delete
-                      at="1"
-                      ref="current()"/>
-                  </xf:action>
+                  
+                  <xf:delete
+                    at="1"
+                    ev:event="DOMActivate"
+                    ref="current()"/>
+                  
                 </xf:trigger>
               </xf:group>
 
               <!-- Display item label and subtotal -->
               <xf:group
                 ref=".[boolean-from-string(@checked)]">
- 
+
                 <!-- Check box selected -->
                 <xf:input
                   class="list-checkbox"
@@ -246,12 +249,14 @@
                     <xf:output
                       value="concat(../@label, ': ', ../../../currency, format-number(../@subtotal, '.00'))"/>
                   </xf:label>
-                  
+
                   <!-- Checkbox deselected -->
-                  <xf:action
-                    ev:event="xforms-value-changed">
-                    <xf:setvalue ref="context()" value="choose(. = 'true', 'true', 'false')"/>
-                  </xf:action>
+                  
+                  <xf:setvalue 
+                    ev:event="xforms-value-changed"
+                    ref="context()" 
+                    value="choose(. = true(), true(), false())"/>
+                  
                 </xf:input>
               </xf:group>
 
@@ -279,14 +284,14 @@
               appearance="minimal"
               class="btn btn-primary btn-lg btn-block">
               <xf:label>Add item</xf:label>
-              <xf:action
-                ev:event="DOMActivate">
+              
                 <xf:insert
                   at="last()"
+                  ev:event="DOMActivate"
                   origin="instance('proto')/item"
                   position="after"
                   ref="list/item"/>
-              </xf:action>
+              
             </xf:trigger>
           </div>
         </div>
