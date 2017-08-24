@@ -7,7 +7,7 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:ev="http://www.w3.org/2001/xml-events"
   xmlns:xf="http://www.w3.org/2002/xforms"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xi="http://www.w3.7org/2001/XInclude"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <head>
@@ -48,7 +48,6 @@
               <item
                 check="false"
                 checked="false"
-                edit="true"
                 label=""
                 price="0"
                 quantity="1"
@@ -91,7 +90,6 @@
           <item
             check="false"
             checked="false"
-            edit="true"
             label=""
             price="0"
             quantity="1"
@@ -197,7 +195,12 @@
       <xf:bind
         ref="groceries/list/">
         <xf:bind
+          ref="item/@check"
+          relevant="false()"
+          type="xs:boolean"/>
+        <xf:bind
           ref="item/@checked"
+          relevant="false()"
           type="xs:boolean"/>
         <xf:bind
           ref="item/@quantity"
