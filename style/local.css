@@ -67,15 +67,15 @@ label{
 }
 
 .xforms-appearance-minimal a:visited{
-  color: darkgray;
+  color: black;
 }
 
 .xforms-appearance-minimal a:hover{
-  color: gray;
+  color: orange;
 }
 
 .xforms-appearance-minimal a:active{
-  color: gray;
+  color: lightgray;
 }
 
 .xforms-hint{

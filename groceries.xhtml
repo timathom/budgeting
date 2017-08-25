@@ -7,7 +7,7 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:ev="http://www.w3.org/2001/xml-events"
   xmlns:xf="http://www.w3.org/2002/xforms"
-  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:xi="http://www.w3.7org/2001/XInclude"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <head>
@@ -36,19 +36,19 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
       name="viewport" />
 
-    <xf:model>
+    <xf:model
+      id="budget-model">
 
       <xf:instance
         id="groceries">
         <data
           xmlns="">
           <groceries
-            active="false">
+            active="">
             <list>
               <item
                 check="false"
                 checked="false"
-                edit="true"
                 label=""
                 price="0"
                 quantity="1"
@@ -79,7 +79,6 @@
           xmlns="">
           <status>
             <response/>
-            <loggedin/>
           </status>
         </data>
       </xf:instance>
@@ -91,11 +90,20 @@
           <item
             check="false"
             checked="false"
-            edit="true"
             label=""
             price="0"
             quantity="1"
             subtotal="0"/>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="state">
+        <data
+          xmlns="">
+          <status
+            saved="false"
+            submit="false"/>
         </data>
       </xf:instance>
 
@@ -107,6 +115,7 @@
         ref=""
         replace="instance"
         resource="/auth-one"
+        serialization="none"
         targetref="status/response">
         <xf:action
           ev:event="xforms-submit">
@@ -134,6 +143,7 @@
         ref=""
         replace="instance"
         resource="/auth-two"
+        serialization="none"
         targetref="status/response">
         <xf:header
           combine="append">
@@ -141,6 +151,22 @@
           <xf:value
             value="concat('Digest ', instance('login')/login/pw)"/>
         </xf:header>
+        <xf:action
+          ev:event="xforms-submit-done">
+
+          <!-- Show form if logged in -->
+          <xf:setvalue ref="instance('groceries')/groceries/@active" value="choose(instance('result')/status/response[boolean-from-string(@loggedin)], true(), false())"/>
+
+          <!-- Hide login if logged in -->
+          <xf:toggle
+            case="hide-login"
+            if="instance('result')/status/response[boolean-from-string(@loggedin)]"/>
+
+          <!-- Notify if not logged in -->
+          <xf:message
+            ref="instance('result')/status/response[not(boolean-from-string(@loggedin))]"/>
+
+        </xf:action>
       </xf:submission>
 
       <xf:submission
@@ -150,7 +176,8 @@
         mode="asynchronous"
         ref=""
         replace="none"
-        resource="/genid"/>
+        resource="/genid"
+        serialization="none"/>
 
       <xf:submission
         id="test"
@@ -163,6 +190,24 @@
         targetref="status/response"/>
 
       <xf:submission
+        id="save-to-db"
+        indent="true"
+        instance="state"
+        method="post"
+        mode="asynchronous"
+        ref="instance('groceries')"
+        relevant="true"
+        replace="instance"
+        resource="/main/save-to-db/1"
+        targetref="status"
+        validate="true">
+        <xf:action
+          ev:event="xforms-submit-error">
+          <xf:setvalue ref="instance('state')/status/@submit" value="false()"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
         id="logout"
         instance="result"
         method="get"
@@ -170,6 +215,7 @@
         ref=""
         replace="instance"
         resource="/logout"
+        serialization="none"
         targetref="status/response"/>
 
       <xf:action
@@ -195,9 +241,10 @@
         ref="instance('login')/login/pass"/>
 
       <xf:bind
-        ref="groceries/list/">
+        ref="groceries/list">
         <xf:bind
-          ref="item/@checked"
+          ref="item/@check | item/@checked"
+          relevant="instance('state')/status[not(boolean-from-string(@submit))]"
           type="xs:boolean"/>
         <xf:bind
           ref="item/@quantity"
@@ -269,12 +316,6 @@
                     <!-- Clear password field -->
                     <xf:setvalue ref="pass" value="''"/>
 
-                    <!-- Hide login -->
-                    <xf:toggle
-                      case="hide-login"/>
-
-                    <!-- Show form -->
-                    <xf:setvalue ref="instance('groceries')/groceries/@active" value="true()"/>
                   </xf:action>
                 </xf:trigger>
               </xf:case>
@@ -282,6 +323,7 @@
               <!-- Hide login form -->
               <xf:case
                 id="hide-login">
+
 
                 <!-- Log out -->
                 <xf:trigger
@@ -292,6 +334,7 @@
                     ev:event="DOMActivate">
                     <xf:send
                       submission="logout"/>
+
                     <xf:toggle
                       case="show-login"/>
 
@@ -299,6 +342,7 @@
                     <xf:setvalue ref="instance('groceries')/groceries/@active" value="false()"/>
                   </xf:action>
                 </xf:trigger>
+
               </xf:case>
             </xf:switch>
           </xf:group>
@@ -308,16 +352,42 @@
 
       <!-- Set context -->
       <xf:group
-        ref="groceries[boolean-from-string(@active)]">
+        ref="groceries[boolean-from-string(@active) and instance('result')/status/response[boolean-from-string(@loggedin)]]">
 
         <!-- Begin app block -->
+
+        <!-- Save list to DB -->
+        <div
+          class="row">
+          <div
+            class="col-xs-12 col-md-2 form-group">
+            <xf:trigger
+              appearance="minimal"
+              class="btn btn-secondary btn-sm">
+              <xf:label>Save to DB</xf:label>
+              <xf:action
+                ev:event="DOMActivate">
+
+
+                <xf:setvalue ref="instance('state')/status/@submit" value="true()"/>
+                <xf:dispatch
+                  name="xforms-rebuild"
+                  targetid="budget-model"/>
+                <xf:send
+                  submission="save-to-db"/>
+
+
+              </xf:action>
+            </xf:trigger>
+          </div>
+        </div>
 
         <div
           class="row">
           <div
             class="col-xs-12 col-md-12 form-group">
             <h2
-              class="form-title">XForms Grocery List</h2>
+              class="form-title">XForms</h2>
 
             <!-- Switch views for budget field -->
             <xf:switch>
@@ -415,7 +485,7 @@
                 <!-- Save item -->
                 <xf:trigger
                   class="btn btn-secondary btn-lg">
-                  <xf:label>Save</xf:label>
+                  <xf:label>Set</xf:label>
 
                   <xf:setvalue ev:event="DOMActivate" ref="current()/@checked" value="true()"/>
 

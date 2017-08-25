@@ -56,7 +56,7 @@ function budget:auth-two(
   return
     if ($user)
     then (replace value of node db:open("nonce")//nonce[last()]/@loggedin with "true", db:output(<response loggedin="true"/>))
-    else db:output(<response>Unable to log in.</response>)
+    else db:output(<response loggedin="false">Unable to log in.</response>)
 };
 
 declare
@@ -68,30 +68,4 @@ function budget:logout() {
   replace value of node db:open("nonce")//nonce[last()]/@loggedin with "false", db:output(<response loggedin="false"/>)
 };
 
-declare
-  %rest:path("/main/{$func}/{$arity}")
-  %rest:GET
-  %rest:POST
-function budget:main(
-  $func as xs:anyAtomicType,
-  $arity as xs:integer
-) as item() {
-  let $db := db:open("nonce")//nonce[last()]
-  return
-    if ($db/@loggedin eq "true")
-    then
-      let $f := function-lookup(xs:QName("budget:"||$func), $arity)
-      return $f()
-    else <nada/>
 
-
-};
-
-declare
-  %private
-function budget:test()
-  as item() {
-
-<p>Hello, World!</p>
-
-};
