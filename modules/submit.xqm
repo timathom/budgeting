@@ -14,15 +14,12 @@ $data as item()*
       (
       copy $d := $data
         modify (
-        replace node $d/*/groceries/@active
-          with attribute {"id"} {$status/lower-case(.)}
+        (:replace node $d/*/groceries/@active
+          with attribute {"id"} {$status/lower-case(.)},:)
+        insert node attribute {"date"} {current-dateTime()} into $d/*/groceries,
+        insert node attribute {"key"} {format-dateTime(current-dateTime(), "[h]:[m01][Pn] on [FNn], [D] [MNn] [Y]")} into $d/*/groceries
         )
-        return
-          (
-          <status
-            saved="true"
-            submit="false">{$d}</status>
-          )
+        return $d/*/groceries
       )
     else
       <status
@@ -31,21 +28,48 @@ $data as item()*
 };
 
 declare
-%rest:path("/main/{$func}/{$arity}")
+%rest:path("/main/{$func}/{$param}")
 %rest:GET
 %rest:POST("{$data}")
 %private
 %updating
 function submit:main(
 $func as xs:anyAtomicType,
-$arity as xs:integer,
+$param as xs:anyAtomicType,
 $data as item()*
 ) {
-  let $d := submit:save-to-db($data)
-  return
-    (
-    insert node $d/*/*
-      as last into db:open("groceries")/data,
-    db:output($d)
-    )
+  switch($func)
+    case "save-to-db" return  
+      let $d := submit:save-to-db($data)
+      return
+        (
+        insert node $d
+          as last into db:open("groceries")/data,
+        db:output($d)
+        )
+    case "load-from-db" return      
+      db:output(web:redirect("http://localhost:8984/load-from-db", map {"list": $param}))
+    default return ()
+};
+
+declare
+%rest:path("/load-from-db")
+%rest:query-param("list", "{$list}")
+%rest:GET
+%private
+function submit:load-from-db(
+  $list as xs:anyAtomicType
+) as item()* {
+  db:open("groceries")//groceries[@key = $list]
+};
+
+declare
+%rest:path("/load-lists-from-db")
+%private
+function submit:load-lists-from-db(
+) as item()* {
+  <lists>{
+    for $list in db:open("groceries")//groceries/@key/data()
+    return <list>{$list}</list>
+  }</lists>
 };

@@ -114,6 +114,10 @@ label{
   float: right;
 }
 
+.x-font{
+  font-size: x-large;
+}
+
 
 /* Custom IDs */
 
