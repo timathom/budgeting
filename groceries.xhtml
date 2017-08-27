@@ -7,11 +7,7 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:ev="http://www.w3.org/2001/xml-events"
   xmlns:xf="http://www.w3.org/2002/xforms"
-<<<<<<< HEAD
-  xmlns:xi="http://www.w3.org/2001/XInclude"
-=======
   xmlns:xi="http://www.w3.7org/2001/XInclude"
->>>>>>> development
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <head>
@@ -130,7 +126,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/auth-one"
+        resource="/basex/auth-one"
         serialization="none"
         targetref="status/response">
         <xf:action
@@ -162,7 +158,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/auth-two"
+        resource="/basex/auth-two"
         serialization="none"
         targetref="status/response">
         <xf:header
@@ -206,7 +202,7 @@
         mode="asynchronous"
         ref=""
         replace="none"
-        resource="/genid"
+        resource="/basex/genid"
         serialization="none">
         <xf:action
           ev:event="xforms-submit-done">
@@ -222,7 +218,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/load-lists-from-db"
+        resource="/basex/load-lists-from-db"
         serialization="none"
         targetref="lists"/>
 
@@ -235,7 +231,7 @@
         ref="instance('groceries')"
         relevant="true"
         replace="instance"
-        resource="/main/save-to-db/1"
+        resource="/basex/main/save-to-db/1"
         targetref="groceries"
         validate="true">
         <xf:action
@@ -287,7 +283,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/logout"
+        resource="/basex/logout"
         serialization="none"
         targetref="status/response"/>
 
@@ -312,7 +308,7 @@
         method="post"
         ref="instance('result')/status/response"
         replace="instance"
-        resource="/echo"
+        resource="/basex/echo"
         targetref="status/response"/>
 
       <xf:action
@@ -391,11 +387,6 @@
     <div
       class="container-fluid">
 
-      <!-- Set context -->
-      <xf:group
-        ref="groceries">
-
-        <!-- Start app block -->
       <!-- Start login block -->
       <div
         class="row">
@@ -528,22 +519,12 @@
         </div>
 
         <!-- Start app body -->
-        
         <div
           class="row">
           <div
             class="col-xs-12 col-md-12 form-group">
             <h2
-
-              class="form-title">XForms Grocery List</h2>
-
-            <!-- Switch views for budget field -->
-            <xf:switch>
-
-              <!-- Enter value for budget -->
-              <xf:case
-                id="set-budget">
-                <xf:input
+              class="form-title">XForms</h2>
             <!-- Switch views for budget and global fields -->
             <xf:switch>
               <!-- Enter values -->
@@ -555,19 +536,7 @@
                   <xf:label>Budget</xf:label>
                   <xf:hint>Amount budgeted for purchases</xf:hint>
                 </xf:input>
-                <!-- Set value for budget -->
-                <xf:trigger
-                  class="btn btn-primary btn-sm">
-                  <xf:label>Set</xf:label>
-                  
-                  <xf:toggle
-                    case="calc-budget"
-                    ev:event="DOMActivate"/>
-                    
-                </xf:trigger>
-              </xf:case>
-
-               <xf:input
+                <xf:input
                   incremental="true"
                   ref="sales-tax">
                   <xf:label>Sales tax</xf:label>
@@ -589,13 +558,10 @@
                     ev:event="DOMActivate"/>
                 </xf:trigger>
               </xf:case>
-
               <!-- Subtract subtotals from budget -->
               <xf:case
                 id="calc-budget">
                 <xf:output
-                  value="concat('Budget: ', currency, format-number(budget - sum(//item/@subtotal), '.00'), ' ')"/>
-
                   class="x-font"
                   value="concat('Budget: ', currency, budget, ' ')"/>
                 <xf:output
@@ -606,20 +572,10 @@
                     concat(', Discount: ', format-number(discount, '0.00')),
                     ''
                   )"/>
-
                 <!-- Edit value for budget -->
                 <xf:trigger
                   class="btn btn-secondary btn-sm">
                   <xf:label>Edit</xf:label>
-                  
-                  <xf:toggle
-                    case="set-budget"
-                    ev:event="DOMActivate"/>
-                    
-                </xf:trigger>
-              </xf:case>
-            </xf:switch>
-
                   <xf:toggle
                     case="set-budget"
                     ev:event="DOMActivate"/>
@@ -628,16 +584,11 @@
             </xf:switch>
             <!-- End switch for global fields -->
 
-
             <!-- Calculate total spent -->
             <h3>
               <span>Total: </span>
               <xf:output
-
-
-
                 value="concat(currency, format-number(total, '.00'))"/>
-
             </h3>
 
             <hr />
@@ -663,9 +614,7 @@
                 <xf:input
                   accesskey="p"
                   class="item-price"
-
                   incremental="true"
-
                   ref="@price">
                   <xf:label>Price</xf:label>
                   <xf:hint>Price of item in local currency (default is US
@@ -675,9 +624,7 @@
                 <!-- Input quantity (count or weight) -->
                 <xf:input
                   class="item-quantity"
-
                   incremental="true"
-
                   ref="@quantity">
                   <xf:label>Quantity</xf:label>
                   <xf:hint>Count or weight of item(s) to be purchased</xf:hint>
@@ -685,9 +632,7 @@
 
                 <!-- Calculate item subtotal (in model binding) -->
                 <xf:input
-
                   incremental="true"
-
                   ref="@subtotal">
                   <xf:label>Total</xf:label>
                 </xf:input>
@@ -695,15 +640,6 @@
                 <!-- Save item -->
                 <xf:trigger
                   class="btn btn-secondary btn-lg">
-
-                  <xf:label>Save</xf:label>
-                  
-                  <xf:setvalue 
-                    ev:event="DOMActivate" 
-                    ref="current()/@checked" 
-                    value="true()"/>
-                    
-
                   <xf:label>Set</xf:label>
                   <xf:action
                     ev:event="DOMActivate">
@@ -723,7 +659,6 @@
 
                   </xf:action>
 
->>>>>>> development
                 </xf:trigger>
 
                 <!-- Delete item -->
@@ -731,20 +666,12 @@
                   class="btn btn-secondary btn-sm"
                   ref=".[count(preceding-sibling::*) &gt; 0]">
                   <xf:label>&#x2796;</xf:label>
-<<<<<<< HEAD
-                  
-=======
 
->>>>>>> development
                   <xf:delete
                     at="1"
                     ev:event="DOMActivate"
                     ref="current()"/>
-<<<<<<< HEAD
-                  
-=======
 
->>>>>>> development
                 </xf:trigger>
               </xf:group>
 
@@ -760,18 +687,6 @@
                   <xf:label
                     class="list-label">
                     <xf:output
-<<<<<<< HEAD
-                      value="concat(../@label, ': ', ../../../currency, format-number(../@subtotal, '.00'))"/>
-                  </xf:label>
-
-                  <!-- Checkbox deselected -->
-                  
-                  <xf:setvalue 
-                    ev:event="xforms-value-changed"
-                    ref="context()" 
-                    value="choose(. = true(), true(), false())"/>
-                  
-=======
                       value="concat(
                         ../@label, 
                         ': ', 
@@ -786,7 +701,6 @@
                     ref="context()"
                     value="choose(. = true(), true(), false())"/>
 
->>>>>>> development
                 </xf:input>
               </xf:group>
 
@@ -800,10 +714,7 @@
           </div>
         </div>
 
-<<<<<<< HEAD
-=======
 
->>>>>>> development
         <!-- End app group -->
 
         <!-- Footer -->
@@ -818,16 +729,6 @@
               appearance="minimal"
               class="btn btn-primary btn-lg btn-block">
               <xf:label>Add item</xf:label>
-<<<<<<< HEAD
-              
-                <xf:insert
-                  at="last()"
-                  ev:event="DOMActivate"
-                  origin="instance('proto')/item"
-                  position="after"
-                  ref="list/item"/>
-              
-=======
 
               <xf:insert
                 at="last()"
@@ -836,16 +737,12 @@
                 position="after"
                 ref="list/item"/>
 
->>>>>>> development
             </xf:trigger>
           </div>
         </div>
 
         <!-- End footer -->
-<<<<<<< HEAD
-=======
 
->>>>>>> development
       </xf:group>
     </div>
     <!-- Latest compiled and minified jQuery JavaScript -->
@@ -853,8 +750,4 @@
     <!-- Latest compiled and minified Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
   </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> development
