@@ -16,8 +16,12 @@ $data as item()*
         modify (
         (:replace node $d/*/groceries/@active
           with attribute {"id"} {$status/lower-case(.)},:)
-        insert node attribute {"date"} {current-dateTime()} into $d/*/groceries,
-        insert node attribute {"key"} {format-dateTime(current-dateTime(), "[h]:[m01][Pn] on [FNn], [D] [MNn] [Y]")} into $d/*/groceries
+          if (not($d/*/groceries/@date) and not($d/*/groceries/@key))
+          then (
+            insert node attribute {"date"} {current-dateTime()} into $d/*/groceries,
+            insert node attribute {"key"} {format-dateTime(current-dateTime(), "[h]:[m01][Pn] on [FNn], [D] [MNn] [Y]")} into $d/*/groceries
+          )
+          else()
         )
         return $d/*/groceries
       )
@@ -72,4 +76,13 @@ function submit:load-lists-from-db(
     for $list in db:open("groceries")//groceries/@key/data()
     return <list>{$list}</list>
   }</lists>
+};
+
+declare
+%rest:path("/echo")
+%rest:POST("{$data}")
+function submit:echo(
+  $data as item()*
+) as item()* {
+  <response>{html:parse($data)}</response>
 };

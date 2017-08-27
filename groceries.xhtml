@@ -131,11 +131,15 @@
         targetref="status/response">
         <xf:action
           ev:event="xforms-submit">
-          <xf:setvalue ref="instance('login')/login/pw" value="../pass"/>
+          <xf:setvalue
+            ref="instance('login')/login/pw"
+            value="../pass"/>
         </xf:action>
         <xf:action
           ev:event="xforms-submit-done">
-          <xf:setvalue ref="instance('login')/login/pw" value="digest(
+          <xf:setvalue
+            ref="instance('login')/login/pw"
+            value="digest(
             concat(.,
                 digest(
                   instance('result')/status/response, 'MD5', 'hex'
@@ -166,18 +170,28 @@
         <xf:action
           ev:event="xforms-submit-done">
           <!-- Show form if logged in -->
-          <xf:setvalue ref="instance('groceries')/groceries/@active" value="choose(instance('result')/status/response[boolean-from-string(@loggedin)], true(), false())"/>
+          <xf:setvalue
+            ref="instance('groceries')/groceries/@active"
+            value="choose(
+              instance('result')
+                /status/response[boolean-from-string(@loggedin)], 
+              true(), 
+              false()
+            )"/>
           <!-- Hide login if logged in -->
           <xf:toggle
             case="hide-login"
-            if="instance('result')/status/response[boolean-from-string(@loggedin)]"/>
+            if="instance('result')
+            /status/response[boolean-from-string(@loggedin)]"/>
           <!-- Load list menu if logged in -->
           <xf:toggle
             case="load-lists"
-            if="instance('result')/status/response[boolean-from-string(@loggedin)]"/>
+            if="instance('result')
+            /status/response[boolean-from-string(@loggedin)]"/>
           <!-- Notify if not logged in -->
           <xf:message
-            ref="instance('result')/status/response[not(boolean-from-string(@loggedin))]"/>
+            ref="instance('result')
+            /status/response[not(boolean-from-string(@loggedin))]"/>
         </xf:action>
       </xf:submission>
 
@@ -222,15 +236,21 @@
         validate="true">
         <xf:action
           ev:event="xforms-submit">
-          <xf:setvalue ref="instance('state')/status/@submit" value="false()"/>
+          <xf:setvalue
+            ref="instance('state')/status/@submit"
+            value="false()"/>
         </xf:action>
         <xf:action
           ev:event="xforms-submit-done">
-          <xf:setvalue ref="instance('state')/status/@saved" value="true()"/>
+          <xf:setvalue
+            ref="instance('state')/status/@saved"
+            value="true()"/>
         </xf:action>
         <xf:action
           ev:event="xforms-submit-error">
-          <xf:setvalue ref="instance('state')/status/@submit" value="false()"/>
+          <xf:setvalue
+            ref="instance('state')/status/@submit"
+            value="false()"/>
         </xf:action>
       </xf:submission>
 
@@ -250,7 +270,9 @@
           value="concat('/main/load-from-db/', instance('lists')/current)"/>
         <xf:action
           ev:event="xforms-submit-error">
-          <xf:setvalue ref="instance('state')/status/@load" value="false()"/>
+          <xf:setvalue
+            ref="instance('state')/status/@load"
+            value="false()"/>
         </xf:action>
       </xf:submission>
 
@@ -265,18 +287,47 @@
         serialization="none"
         targetref="status/response"/>
 
+      <xf:submission
+        id="echo"
+        instance="result"
+        method="get"
+        replace="text"
+        resource="javascript:XsltForms_xmlevents.EventContexts[0].type"
+        serialization="none"
+        targetref="status/response">
+      <!--  <xf:action
+          ev:event="xforms-submit-done">
+          <xf:send
+            submission="test"/>
+        </xf:action>-->
+      </xf:submission>
+
+      <xf:submission
+        id="test"
+        instance="result"
+        method="post"
+        ref="instance('result')/status/response"
+        replace="instance"
+        resource="/echo"
+        targetref="status/response"/>
+
       <xf:action
         ev:event="xforms-ready">
         <xf:send
           submission="genid"/>
+        <xf:send
+          submission="echo"/>
       </xf:action>
 
       <xf:action
         ev:event="update-total">
-        <xf:setvalue ref="groceries/total" value="format-number(
+        <xf:setvalue
+          ref="groceries/total"
+          value="format-number(
           choose(
             ../sales-tax &gt; 0 and ../discount &gt; 0,
-            (event('subtotal') + (event('subtotal') * ../sales-tax)) - (event('subtotal') * ../discount),
+            (event('subtotal') + (event('subtotal') * ../sales-tax)) 
+              - (event('subtotal') * ../discount),
             choose(
               ../sales-tax &gt; 0 and ../discount = 0,                  
               event('subtotal') + (event('subtotal') * ../sales-tax),
@@ -284,7 +335,9 @@
             )                   
           ), '.00'
         )"/>
-        <xf:setvalue ref="groceries/budget" value="format-number(. - ../total, '.00')"/>
+        <xf:setvalue
+          ref="groceries/budget"
+          value="format-number(. - ../total, '.00')"/>
       </xf:action>
 
 
@@ -341,7 +394,9 @@
           class="col-xs-12 col-md-2 form-group">
           <xf:group
             ref="instance('login')/login">
+            <!-- Start switch -->
             <xf:switch>
+              <!-- CASE 1 -->
               <!-- Show login form -->
               <xf:case
                 id="show-login">
@@ -371,10 +426,13 @@
                     <xf:send
                       submission="auth-one"/>
                     <!-- Clear password field -->
-                    <xf:setvalue ref="pass" value="''"/>
+                    <xf:setvalue
+                      ref="pass"
+                      value="''"/>
                   </xf:action>
                 </xf:trigger>
               </xf:case>
+              <!-- CASE 2 -->
               <!-- Hide login form -->
               <xf:case
                 id="hide-login">
@@ -390,10 +448,13 @@
                     <xf:toggle
                       case="show-login"/>
                     <!-- Hide form -->
-                    <xf:setvalue ref="instance('groceries')/groceries/@active" value="false()"/>
+                    <xf:setvalue
+                      ref="instance('groceries')/groceries/@active"
+                      value="false()"/>
                   </xf:action>
                 </xf:trigger>
               </xf:case>
+              <!-- CASE 3 -->
               <!-- Load list from DB -->
               <!-- Present dropdown after login -->
               <xf:case
@@ -416,7 +477,9 @@
                   <xf:label>Load list from DB</xf:label>
                   <xf:action
                     ev:event="DOMActivate">
-                    <xf:setvalue ref="instance('state')/status/@load" value="true()"/>
+                    <xf:setvalue
+                      ref="instance('state')/status/@load"
+                      value="true()"/>
                     <xf:send
                       submission="load-from-db"/>
                   </xf:action>
@@ -431,7 +494,8 @@
       <!-- Begin app block -->
       <!-- Set context -->
       <xf:group
-        ref="groceries[boolean-from-string(@active) and instance('result')/status/response[boolean-from-string(@loggedin)]]">
+        ref="groceries[boolean-from-string(@active) and 
+          instance('result')/status/response[boolean-from-string(@loggedin)]]">
         <!-- Save list to DB -->
         <div
           class="row">
@@ -443,7 +507,9 @@
               <xf:label>Save to DB</xf:label>
               <xf:action
                 ev:event="DOMActivate">
-                <xf:setvalue ref="instance('state')/status/@submit" value="true()"/>
+                <xf:setvalue
+                  ref="instance('state')/status/@submit"
+                  value="true()"/>
                 <xf:rebuild/>
                 <xf:send
                   submission="save-to-db"/>
@@ -451,7 +517,7 @@
             </xf:trigger>
           </div>
         </div>
-        
+
         <!-- Start app body -->
         <div
           class="row">
@@ -578,7 +644,9 @@
                   <xf:action
                     ev:event="DOMActivate">
 
-                    <xf:setvalue ref="current()/@checked" value="true()"/>
+                    <xf:setvalue
+                      ref="current()/@checked"
+                      value="true()"/>
 
                     <!-- Update current total -->
                     <xf:dispatch
@@ -619,12 +687,19 @@
                   <xf:label
                     class="list-label">
                     <xf:output
-                      value="concat(../@label, ': ', ../../../currency, format-number(../@subtotal, '.00'))"/>
+                      value="concat(
+                        ../@label, 
+                        ': ', 
+                        ../../../currency, 
+                        format-number(../@subtotal, '.00'))"/>
                   </xf:label>
 
                   <!-- Checkbox deselected -->
 
-                  <xf:setvalue ev:event="xforms-value-changed" ref="context()" value="choose(. = true(), true(), false())"/>
+                  <xf:setvalue
+                    ev:event="xforms-value-changed"
+                    ref="context()"
+                    value="choose(. = true(), true(), false())"/>
 
                 </xf:input>
               </xf:group>
