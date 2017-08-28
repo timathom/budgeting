@@ -52,7 +52,7 @@ $data as item()*
         db:output($d)
         )
     case "load-from-db" return      
-      db:output(web:redirect("http://localhost:8984/load-from-db", map {"list": $param}))
+      db:output(web:redirect("/load-from-db", map {"list": $param}))
     default return ()
 };
 

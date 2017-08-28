@@ -131,7 +131,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/auth-one"
+        resource="/basex/auth-one"
         serialization="none"
         targetref="status/response">
         <xf:action
@@ -163,7 +163,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/auth-two"
+        resource="/basex/auth-two"
         serialization="none"
         targetref="status/response">
         <xf:header
@@ -207,7 +207,7 @@
         mode="asynchronous"
         ref=""
         replace="none"
-        resource="/genid"
+        resource="/basex/genid"
         serialization="none">
         <xf:action
           ev:event="xforms-submit-done">
@@ -223,7 +223,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/load-lists-from-db"
+        resource="/basex/load-lists-from-db"
         serialization="none"
         targetref="lists"/>
 
@@ -236,7 +236,7 @@
         ref="instance('groceries')"
         relevant="true"
         replace="instance"
-        resource="/main/save-to-db/1"
+        resource="/basex/main/save-to-db/1"
         targetref="groceries"
         validate="true">
         <xf:action
@@ -288,7 +288,7 @@
         mode="asynchronous"
         ref=""
         replace="instance"
-        resource="/logout"
+        resource="/basex/logout"
         serialization="none"
         targetref="status/response"/>
 
@@ -313,7 +313,7 @@
         method="post"
         ref="instance('result')/status/response"
         replace="instance"
-        resource="/echo"
+        resource="/basex/echo"
         targetref="status/response"/>
 
       <xf:action
@@ -388,6 +388,7 @@
 
     </xf:model>
 
+
     <script type="application/javascript"><![CDATA[
       function checkEvent() {
         var t =[]
@@ -399,6 +400,7 @@
         return t
       }//]]>
     </script>
+
   </head>
   <body>
     <div
