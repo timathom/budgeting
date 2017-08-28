@@ -1,0 +1,776 @@
+<?xml-stylesheet href="xsltforms/build/xsltforms.xsl" type="text/xsl"?>
+<?xsltforms-options debug="no"?>
+<?css-conversion no?>
+<?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl"
+    schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xf="http://www.w3.org/2002/xforms"
+  xmlns:xi="http://www.w3.7org/2001/XInclude"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <head>
+    <title>XForms grocery list</title>
+    <meta
+      content="IE=edge"
+      http-equiv="X-UA-Compatible" />
+
+    <!-- Latest compiled and minified Bootstrap CSS -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      rel="stylesheet" />
+
+    <!-- Optional Bootstrap theme -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      rel="stylesheet" />
+
+    <!-- Custom CSS -->
+    <link
+      href="style/local.css"
+      rel="stylesheet" />
+
+    <!-- Scale for mobile -->
+    <meta
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+      name="viewport" />
+
+    <xf:model
+      id="budget-model">
+
+      <xf:instance
+        id="groceries">
+        <data
+          xmlns="">
+          <groceries
+            active="">
+            <list>
+              <item
+                check="false"
+                checked="false"
+                label=""
+                price="0"
+                quantity="1"
+                subtotal="0"
+                xml:id="list-item">Testing----</item>
+            </list>
+            <currency>$</currency>
+            <sales-tax>0.0635</sales-tax>
+            <discount>0.00</discount>
+            <budget>0.00</budget>
+            <total>0.00</total>
+          </groceries>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="login">
+        <data
+          xmlns="">
+          <login>
+            <user
+              xml:id="user1">admin</user>
+            <pass/>
+            <pw/>
+          </login>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="result">
+        <data
+          xmlns="">
+          <status>
+            <response/>
+          </status>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="proto">
+        <data
+          xmlns="">
+          <item
+            check="false"
+            checked="false"
+            label=""
+            price="0"
+            quantity="1"
+            subtotal="0"
+            xml:id="new-list-item">Testing...</item>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="state">
+        <data
+          xmlns="">
+          <status
+            load="false"
+            saved="false"
+            submit="false"/>
+          <check
+            rel="list-item"
+            status="false"/>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="lists">
+        <data
+          xmlns="">
+          <current/>
+          <lists/>
+        </data>
+      </xf:instance>
+
+      <xf:instance
+        id="json"
+        mediatype="text/json"> [] </xf:instance>
+
+      <xf:submission
+        id="auth-one"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/auth-one"
+        serialization="none"
+        targetref="status/response">
+        <xf:action
+          ev:event="xforms-submit">
+          <xf:setvalue ref="instance('login')/login/pw" value="../pass"/>
+        </xf:action>
+        <xf:action
+          ev:event="xforms-submit-done">
+          <xf:setvalue ref="instance('login')/login/pw" value="digest(
+            concat(.,
+                digest(
+                  instance('result')/status/response, 'MD5', 'hex'
+                )
+              ), 'MD5', 'hex'
+            )"/>
+          <xf:send
+            submission="auth-two"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
+        id="auth-two"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/auth-two"
+        serialization="none"
+        targetref="status/response">
+        <xf:header
+          combine="append">
+          <xf:name>Authorization</xf:name>
+          <xf:value
+            value="concat('Digest ', instance('login')/login/pw)"/>
+        </xf:header>
+        <xf:action
+          ev:event="xforms-submit-done">
+          <!-- Show form if logged in -->
+          <xf:setvalue ref="instance('groceries')/groceries/@active" value="choose(
+              instance('result')
+                /status/response[boolean-from-string(@loggedin)], 
+              true(), 
+              false()
+            )"/>
+          <!-- Hide login if logged in -->
+          <xf:toggle
+            case="hide-login"
+            if="instance('result')
+            /status/response[boolean-from-string(@loggedin)]"/>
+          <!-- Load list menu if logged in -->
+          <xf:toggle
+            case="load-lists"
+            if="instance('result')
+            /status/response[boolean-from-string(@loggedin)]"/>
+          <!-- Notify if not logged in -->
+          <xf:message
+            ref="instance('result')
+            /status/response[not(boolean-from-string(@loggedin))]"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
+        id="genid"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="none"
+        resource="/genid"
+        serialization="none">
+        <xf:action
+          ev:event="xforms-submit-done">
+          <xf:send
+            submission="load-lists-from-db"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
+        id="load-lists-from-db"
+        instance="lists"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/load-lists-from-db"
+        serialization="none"
+        targetref="lists"/>
+
+      <xf:submission
+        id="save-to-db"
+        indent="true"
+        instance="groceries"
+        method="post"
+        mode="asynchronous"
+        ref="instance('groceries')"
+        relevant="true"
+        replace="instance"
+        resource="/main/save-to-db/1"
+        targetref="groceries"
+        validate="true">
+        <xf:action
+          ev:event="xforms-submit">
+          <xf:setvalue ref="instance('state')/status/@submit" value="false()"/>
+        </xf:action>
+        <xf:action
+          ev:event="xforms-submit-done">
+          <xf:setvalue ref="instance('state')/status/@saved" value="true()"/>
+        </xf:action>
+        <xf:action
+          ev:event="xforms-submit-error">
+          <xf:setvalue ref="instance('state')/status/@submit" value="false()"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
+        id="load-from-db"
+        indent="true"
+        instance="groceries"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        relevant="true"
+        replace="instance"
+        serialization="none"
+        targetref="groceries"
+        validate="true">
+        <xf:resource
+          value="concat('/main/load-from-db/', instance('lists')/current)"/>
+        <xf:action
+          ev:event="xforms-submit-error">
+          <xf:setvalue ref="instance('state')/status/@load" value="false()"/>
+        </xf:action>
+      </xf:submission>
+
+      <xf:submission
+        id="logout"
+        instance="result"
+        method="get"
+        mode="asynchronous"
+        ref=""
+        replace="instance"
+        resource="/logout"
+        serialization="none"
+        targetref="status/response"/>
+
+      <xf:submission
+        id="echo"
+        instance="json"
+        method="get"
+        replace="text"
+        resource="javascript:checkEvent()"
+        serialization="none"
+        targetref="*">
+        <!--  <xf:action
+          ev:event="xforms-submit-done">
+          <xf:send
+            submission="test"/>
+        </xf:action>-->
+      </xf:submission>
+
+      <xf:submission
+        id="test"
+        instance="result"
+        method="post"
+        ref="instance('result')/status/response"
+        replace="instance"
+        resource="/echo"
+        targetref="status/response"/>
+
+      <xf:action
+        ev:event="xforms-ready">
+        <xf:send
+          submission="genid"/>
+        <xf:send
+          submission="echo"/>
+      </xf:action>
+
+      <xf:action
+        ev:event="update-total">
+        <xf:setvalue ref="groceries/total" value="format-number(
+          choose(
+            ../sales-tax &gt; 0 and ../discount &gt; 0,
+            (event('subtotal') + (event('subtotal') * ../sales-tax)) 
+              - (event('subtotal') * ../discount),
+            choose(
+              ../sales-tax &gt; 0 and ../discount = 0,                  
+              event('subtotal') + (event('subtotal') * ../sales-tax),
+              event('subtotal')
+            )                   
+          ), '.00'
+        )"/>
+        <xf:setvalue ref="groceries/budget" value="format-number(. - ../total, '.00')"/>
+      </xf:action>
+
+
+      <xf:bind
+        calculate="choose(
+          not(
+            normalize-space(.)
+          ),
+          '',
+          digest(
+            concat(
+              ../user, ':BaseX:', .
+            ), 'MD5', 'hex'
+          )
+        )"
+        id="pass-binding"
+        readonly="false()"
+        ref="instance('login')/login/pass"
+        xml:id="bind1"/>
+
+      <xf:bind
+        ref="groceries/list">
+        <xf:bind
+          ref="item/@check | item/@checked"
+          relevant="instance('state')/status[not(boolean-from-string(@submit))]"
+          type="xs:boolean"/>
+        <xf:bind
+          ref="item/@quantity"
+          type="xs:double"/>
+        <xf:bind
+          ref="item/@price"
+          type="xs:double"/>
+        <xf:bind
+          calculate="../@price * ../@quantity"
+          ref="item/@subtotal"
+          type="xs:double"/>
+        <xf:bind
+          ref="budget"
+          type="xs:double"/>
+        <xf:bind
+          ref="total"
+          type="xs:double"/>
+      </xf:bind>
+
+
+    </xf:model>
+
+
+    <script type="application/javascript"><![CDATA[
+      function checkEvent() {
+        var t =[]
+        if (typeof XsltForms_xmlevents.EventContexts !== undefined) {
+          for (i = 0; i < XsltForms_xmlevents.EventContexts.length; i++) {
+            t[i] = XsltForms_xmlevents.EventContexts[i].type;
+          }
+        }
+        return t
+      }
+      // https://stackoverflow.com/questions/19669786/check-if-element-is-visible-in-dom#answer-21696585
+      function assertEnabled(control) {
+        var style = window.getComputedStyle(control);
+        return (style.display !== "none")
+      }//]]>
+    </script>
+
+  </head>
+  <body>
+    <xf:include
+      src="binds.xml"/>
+    <div
+      class="container-fluid">
+      <xf:var
+        name="id"
+        value="instance('state')/check/@rel"/>
+      <xf:trigger>
+        <xf:label>Test</xf:label>
+        <xf:action
+          ev:event="DOMActivate">
+          <xf:send
+            submission="echo"/>
+          <xf:message>
+          
+            <xf:output
+              value="js-eval('assertEnabled(document.getElementById(&quot;hide-login&quot;))')"/>
+          </xf:message>
+        </xf:action>
+      </xf:trigger>
+      <!-- Start login block -->
+      <div
+        class="row">
+        <div
+          class="col-xs-12 col-md-2 form-group">
+          <xf:group
+            ref="instance('login')/login">
+            <!-- Start switch -->
+            <xf:switch>
+              <!-- CASE 1 -->
+              <!-- Show login form -->
+              <xf:case
+                id="show-login">
+                <xf:label>Login</xf:label>
+                <!-- Username -->
+                <xf:input
+                  ref="user">
+                  <xf:label>Username</xf:label>
+                </xf:input>
+                <!-- Password -->
+                <xf:secret
+                  bind="pass-binding"
+                  id="pw1">
+                  <xf:label>Password</xf:label>
+                </xf:secret>
+                <!-- Submit credentials -->
+                <xf:trigger
+                  class="btn btn-secondary btn-sm"
+                  id="t1">
+                  <xf:label>OK</xf:label>
+                  <xf:action
+                    ev:event="DOMActivate">
+                    <!-- Toggle focus to ensure form input has been updated -->
+                    <xf:setfocus
+                      control="pw1"/>
+                    <xf:setfocus
+                      control="t1"/>
+                    <xf:send
+                      submission="auth-one"/>
+                    <!-- Clear password field -->
+                    <xf:setvalue ref="pass" value="''"/>
+                  </xf:action>
+                </xf:trigger>
+              </xf:case>
+              <!-- CASE 2 -->
+              <!-- Hide login form -->
+              <xf:case
+                id="hide-login">
+                <!-- Log out -->
+                <xf:trigger
+                  appearance="minimal"
+                  class="btn btn-secondary btn-sm">
+                  <xf:label>Log out</xf:label>
+                  <xf:action
+                    ev:event="DOMActivate">
+                    <xf:send
+                      submission="logout"/>
+                    <xf:toggle
+                      case="show-login"/>
+                    <!-- Hide form -->
+                    <xf:setvalue ref="instance('groceries')/groceries/@active" value="false()"/>
+                  </xf:action>
+                </xf:trigger>
+              </xf:case>
+              <!-- CASE 3 -->
+              <!-- Load list from DB -->
+              <!-- Present dropdown after login -->
+              <xf:case
+                id="load-lists">
+                <xf:select1
+                  appearance="minimal"
+                  incremental="true"
+                  ref="instance('lists')/current">
+                  <xf:itemset
+                    ref="../lists/list">
+                    <xf:label
+                      ref="."/>
+                    <xf:value
+                      ref="."/>
+                  </xf:itemset>
+                </xf:select1>
+                <xf:trigger
+                  appearance="minimal"
+                  class="btn btn-secondary btn-sm">
+                  <xf:label>Load list from DB</xf:label>
+                  <xf:action
+                    ev:event="DOMActivate">
+                    <xf:setvalue ref="instance('state')/status/@load" value="true()"/>
+                    <xf:send
+                      submission="load-from-db"/>
+                  </xf:action>
+                </xf:trigger>
+              </xf:case>
+            </xf:switch>
+          </xf:group>
+        </div>
+      </div>
+      <!-- End login block -->
+
+      <!-- Begin app block -->
+      <!-- Set context -->
+      <xf:group
+        ref="groceries[boolean-from-string(@active) and 
+          instance('result')/status/response[boolean-from-string(@loggedin)]]">
+        <!-- Save list to DB -->
+        <div
+          class="row">
+          <div
+            class="col-xs-12 col-md-2 form-group">
+            <xf:trigger
+              appearance="minimal"
+              class="btn btn-secondary btn-sm">
+              <xf:label>Save to DB</xf:label>
+              <xf:action
+                ev:event="DOMActivate">
+                <xf:setvalue ref="instance('state')/status/@submit" value="true()"/>
+                <xf:rebuild/>
+                <xf:send
+                  submission="save-to-db"/>
+              </xf:action>
+            </xf:trigger>
+          </div>
+        </div>
+
+        <!-- Start app body -->
+        <div
+          class="row">
+          <div
+            class="col-xs-12 col-md-12 form-group">
+            <h2
+              class="form-title">XForms</h2>
+            <!-- Switch views for budget and global fields -->
+            <xf:switch>
+              <!-- Enter values -->
+              <xf:case
+                id="set-budget">
+                <xf:input
+                  incremental="true"
+                  ref="budget">
+                  <xf:label>Budget</xf:label>
+                  <xf:hint>Amount budgeted for purchases</xf:hint>
+                </xf:input>
+                <xf:input
+                  incremental="true"
+                  ref="sales-tax">
+                  <xf:label>Sales tax</xf:label>
+                  <xf:hint>Local sales tax (percent as decimal)</xf:hint>
+                </xf:input>
+                <xf:input
+                  incremental="true"
+                  ref="discount">
+                  <xf:label>Discount</xf:label>
+                  <xf:hint>Any applicable discount (percent as
+                    decimal)</xf:hint>
+                </xf:input>
+                <!-- Set values -->
+                <xf:trigger
+                  class="btn btn-primary btn-sm">
+                  <xf:label>Set</xf:label>
+                  <xf:toggle
+                    case="calc-budget"
+                    ev:event="DOMActivate"/>
+                </xf:trigger>
+              </xf:case>
+              <!-- Subtract subtotals from budget -->
+              <xf:case
+                id="calc-budget">
+                <xf:output
+                  class="x-font"
+                  value="concat('Budget: ', currency, budget, ' ')"/>
+                <xf:output
+                  value="concat('(Sales tax: ', format-number(sales-tax, '0.0000'), ')')"/>
+                <xf:output
+                  value="choose(
+                    discount &gt; 0,
+                    concat(', Discount: ', format-number(discount, '0.00')),
+                    ''
+                  )"/>
+                <!-- Edit value for budget -->
+                <xf:trigger
+                  class="btn btn-secondary btn-sm">
+                  <xf:label>Edit</xf:label>
+                  <xf:toggle
+                    case="set-budget"
+                    ev:event="DOMActivate"/>
+                </xf:trigger>
+              </xf:case>
+            </xf:switch>
+            <!-- End switch for global fields -->
+
+            <!-- Calculate total spent -->
+            <h3>
+              <span>Total: </span>
+              <xf:output
+                value="concat(currency, format-number(total, '.00'))"/>
+            </h3>
+
+            <hr />
+
+            <!-- Start list -->
+            <xf:repeat
+              id="groceries-repeat"
+              ref="list/item">
+
+              <!-- Edit list item -->
+              <xf:group
+                ref=".[not(boolean-from-string(@checked))]">
+
+                <!-- Set item label -->
+                <xf:input
+                  ref="@label">
+                  <xf:label>Item</xf:label>
+                  <xf:hint>Short, descriptive name of an item to be
+                    purchased</xf:hint>
+                </xf:input>
+
+                <!-- Input price -->
+                <xf:input
+                  accesskey="p"
+                  class="item-price"
+                  incremental="true"
+                  ref="@price">
+                  <xf:label>Price</xf:label>
+                  <xf:hint>Price of item in local currency (default is US
+                    dollars)</xf:hint>
+                </xf:input>
+
+                <!-- Input quantity (count or weight) -->
+                <xf:input
+                  class="item-quantity"
+                  incremental="true"
+                  ref="@quantity">
+                  <xf:label>Quantity</xf:label>
+                  <xf:hint>Count or weight of item(s) to be purchased</xf:hint>
+                </xf:input>
+
+                <!-- Calculate item subtotal (in model binding) -->
+                <xf:input
+                  incremental="true"
+                  ref="@subtotal">
+                  <xf:label>Total</xf:label>
+                </xf:input>
+
+                <!-- Save item -->
+                <xf:trigger
+                  class="btn btn-secondary btn-lg">
+                  <xf:label>Set</xf:label>
+                  <xf:action
+                    ev:event="DOMActivate">
+
+                    <xf:setvalue ref="current()/@checked" value="true()"/>
+
+                    <!-- Update current total -->
+                    <xf:dispatch
+                      name="update-total"
+                      targetid="budget-model">
+                      <xf:property
+                        name="subtotal"
+                        value="sum(groceries//item/@subtotal)"/>
+                    </xf:dispatch>
+
+                  </xf:action>
+
+                </xf:trigger>
+
+                <!-- Delete item -->
+                <xf:trigger
+                  class="btn btn-secondary btn-sm"
+                  ref=".[count(preceding-sibling::*) &gt; 0]">
+                  <xf:label>&#x2796;</xf:label>
+
+                  <xf:delete
+                    at="1"
+                    ev:event="DOMActivate"
+                    ref="current()"/>
+
+                </xf:trigger>
+              </xf:group>
+
+              <!-- Display item label and subtotal -->
+              <xf:group
+                ref=".[boolean-from-string(@checked)]">
+
+                <!-- Check box selected -->
+                <xf:input
+                  class="list-checkbox"
+                  incremental="true"
+                  ref="@checked">
+                  <xf:label
+                    class="list-label">
+                    <xf:output
+                      value="concat(
+                        ../@label, 
+                        ': ', 
+                        ../../../currency, 
+                        format-number(../@subtotal, '.00'))"/>
+                  </xf:label>
+
+                  <!-- Checkbox deselected -->
+
+                  <xf:setvalue ev:event="xforms-value-changed" ref="context()" value="choose(. = true(), true(), false())"/>
+
+                </xf:input>
+              </xf:group>
+
+              <br />
+              <hr />
+
+            </xf:repeat>
+
+            <!-- End list -->
+
+          </div>
+        </div>
+
+
+        <!-- End app group -->
+
+        <!-- Footer -->
+        <div
+          class="row">
+          <div
+            class="col-xs-12 col-md-12 btn-group btn-group-justified"
+            id="footer">
+            <xf:var
+              name="digest"
+              value="concat('list-item-', digest(random(), 'SHA-256', 'hex'))"/>
+            <!-- Add item -->
+            <xf:trigger
+              appearance="minimal"
+              class="btn btn-primary btn-lg btn-block">
+              <xf:label>Add item</xf:label>
+              <xf:action
+                ev:event="DOMActivate">
+                <xf:insert
+                  at="last()"
+                  origin="instance('proto')/item"
+                  position="after"
+                  ref="list/item"/>
+
+                <xf:setvalue ref="list/item[last()]/@xml:id" value="$digest"/>
+                <xf:setvalue ref="instance('state')/check[last()]/@rel" value="concat('#', $digest)"/>
+              </xf:action>
+            </xf:trigger>
+          </div>
+        </div>
+
+        <!-- End footer -->
+
+      </xf:group>
+    </div>
+    <!-- Latest compiled and minified jQuery JavaScript -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <!-- Latest compiled and minified Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+  </body>
+</html>
