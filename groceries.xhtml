@@ -119,6 +119,11 @@
         </data>
       </xf:instance>
 
+      <xf:instance
+        id="json" mediatype="text/json">
+        []
+      </xf:instance>
+
       <xf:submission
         id="auth-one"
         instance="result"
@@ -289,13 +294,13 @@
 
       <xf:submission
         id="echo"
-        instance="result"
+        instance="json"
         method="get"
         replace="text"
-        resource="javascript:XsltForms_xmlevents.EventContexts[0].type"
+        resource="javascript:checkEvent()"
         serialization="none"
-        targetref="status/response">
-      <!--  <xf:action
+        targetref="*">
+        <!--  <xf:action
           ev:event="xforms-submit-done">
           <xf:send
             submission="test"/>
@@ -382,11 +387,28 @@
       </xf:bind>
 
     </xf:model>
+
+    <script type="application/javascript"><![CDATA[
+      function checkEvent() {
+        var t =[]
+        if (typeof XsltForms_xmlevents.EventContexts !== undefined) {
+          for (i = 0; i < XsltForms_xmlevents.EventContexts.length; i++) {
+            t[i] = XsltForms_xmlevents.EventContexts[i].type;
+          }
+        }
+        return t
+      }//]]>
+    </script>
   </head>
   <body>
     <div
       class="container-fluid">
-
+      <xf:trigger>
+        <xf:label>Test</xf:label>
+        <xf:send
+          ev:event="DOMActivate"
+          submission="echo"/>
+      </xf:trigger>
       <!-- Start login block -->
       <div
         class="row">
