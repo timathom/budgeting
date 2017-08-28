@@ -12,7 +12,8 @@
       <groceries>
         <list>
           <item
-            taxable="false">
+            taxable="false"
+            xml:id="list-item">
             <label/>
             <quantity/>
             <subtotal/>
@@ -87,5 +88,5 @@
       <response/>
     </data>
   </instance>
-<!-- / -->
+  <!-- / -->
 </model>
