@@ -2,6 +2,7 @@
 <model
   id="groceries-model"
   xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.w3.org/2002/xforms schema/XForms-11-Schema.xsd">
   <!-- Main instance -->
@@ -89,4 +90,7 @@
     </data>
   </instance>
   <!-- / -->
+  <xi:include
+    href="binds.xml"
+    xmlns:xi="http://www.w3.org/2001/XInclude"/>
 </model>

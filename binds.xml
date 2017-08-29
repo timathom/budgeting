@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<group xmlns="http://www.w3.org/2002/xforms" ref="groceries/list/item"/>
+<bind
+  id="b1"
+  xmlns="http://www.w3.org/2002/xforms"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.w3.org/2002/xforms schema/XForms-11-Schema.xsd"/>
