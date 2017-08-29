@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group
+  id="g1"
+  xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events">
+  <switch>
+    <case
+      selected="true">
+      <label>test 1</label>
+      <group>
+        <label>when the page loads</label>
+        <group
+          id="t1"
+          ref="instance('expect')/test">
+          <label>the login form should be displayed</label>
+
+
+
+
+
+
+          <output
+            value="concat('Passed? ', @passed)"/>
+        </group>
+        <action
+          ev:event="perform-test"
+          ev:observer="t1">
+          <setvalue
+            ref="instance('expect')/test/actual"
+            value="js-eval('assertDisplayed(document.getElementById(&quot;show-login&quot;))')"/>
+          <setvalue
+            ref="instance('expect')/test/@passed"
+            value="choose(../actual = ../expected, true(), false())"/>
+        </action>
+
+
+        <group>
+          <label>the login form should be enabled</label>
+          <!-- pending -->
+        </group>
+        <group
+          id="t3">
+          <label>the rest of the form should be hidden</label>
+          <!-- pending -->
+        </group>
+      </group>
+    </case>
+  </switch>
+</group>

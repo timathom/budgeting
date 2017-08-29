@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<group
+  xmlns="http://www.w3.org/2002/xforms"
+  xmlns:ev="http://www.w3.org/2001/xml-events">
+  <switch>
+    <case
+      selected="true">
+      <label>
+        <output
+          ref="groceries/list/item/@taxable"/>
+      </label>
+      <group
+        ref="instance('login')">
+        <label>when the page loads</label>
+        <group>
+          <label>the login form should be displayed</label>
+          <output
+            value="compare(1, 0)"/>
+        </group>
+        <group>
+          <label>the login form should be enabled</label>
+          <!-- pending -->
+        </group>
+        <group>
+          <label>the rest of the form should be hidden</label>
+          <!-- pending -->
+        </group>
+      </group>
+    </case>
+  </switch>
+</group>

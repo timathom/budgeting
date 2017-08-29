@@ -1,0 +1,128 @@
+
+/* DOM elements */
+
+body{
+  font-size: 1.5em;
+}
+
+button{
+  background: inherit;
+  border: 1px;
+  font-size: inherit;
+  background-color: inherit;
+  border-color: inherit;
+  color: inherit;
+}
+
+input[type = checkbox]{
+  width: 20px;
+  height: 20px;
+}
+
+input,
+select,
+textarea{
+  color: black !important;
+}
+
+input[type = text],
+input[type = password],
+textarea{
+  width: 90%;
+  padding: 4px 4px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type = text]:focus,
+input[type = password]:focus,
+select:focus{
+  border: 1px solid blue;
+}
+
+label{
+  font-size: larger !important;
+}
+
+/* XForms classes */
+
+.xforms-appearance-minimal a:link{
+  color: black;
+}
+
+.xforms-appearance-minimal a:visited{
+  color: black;
+}
+
+.xforms-appearance-minimal a:hover{
+  color: lightgray;
+}
+
+.xforms-appearance-minimal a:active{
+  color: lightgray;
+}
+
+.xforms-hint{
+  margin: 5px;
+}
+
+.xforms-label{
+  display: block;
+}
+
+/* Bootstrap classes */
+
+.btn{
+  margin: 4px 0;
+  padding: 4px;
+  display: table;
+}
+
+.btn-secondary{
+  border-color: black;
+}
+
+.btn-primary a:hover{
+  color: lightgray;  
+}
+
+/* Custom classes */
+
+.form-title{
+  text-align: center;
+}
+
+.item-price input{
+  text-align: left !important;
+}
+
+.item-quantity input{
+  text-align: left !important;
+}
+
+.list-checkbox{
+  display: block;
+  float: left;
+}
+
+.list-checkbox input{
+  margin: 5px;
+}
+
+.list-label{
+  float: right;
+}
+
+.x-font{
+  font-size: x-large;
+}
+
+
+/* Custom IDs */
+
+#footer{
+  height: 60px;
+}

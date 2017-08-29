@@ -1,0 +1,42 @@
+<?xml-stylesheet href="xsltforms/build/xsltforms.xsl" type="text/xsl"?>
+<?xsltforms-options debug="no"?>
+<?css-conversion no?>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:xf="http://www.w3.org/2002/xforms"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <head>
+    <title>Grocery list</title>
+    <model
+      id="subform-default"
+      xmlns="http://www.w3.org/2002/xforms">
+      <instance>
+        <data
+          xmlns=""/>
+      </instance>
+      <action
+        ev:event="xforms-subform-ready">
+        <dispatch
+          name="perform-test"
+          targetid="t1"/>
+      </action>
+    </model>
+  </head>
+  <body>
+    <div
+      class="container-fluid">
+      <h1>In testing...</h1>
+      <switch
+        xmlns="http://www.w3.org/2002/xforms">
+        <case
+          id="show-login"/>
+        <case
+          id="hide-login"/>
+        <case
+          id="load-list"/>
+      </switch>
+    </div>
+  </body>
+</html>
