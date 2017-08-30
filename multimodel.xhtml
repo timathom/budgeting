@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="xsltforms/build/xsltforms.xsl" type="text/xsl"?>
+<?xsltforms-options debug="yes"?>
+<?css-conversion no?>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
+  xmlns:xf="http://www.w3.org/2002/xforms"
+  xmlns:xi="http://www.w3.7org/2001/XInclude"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <head>
+    <title>XForms test suite</title>
+    <!-- Force IE Edge -->
+    <meta
+      content="IE=edge"
+      http-equiv="X-UA-Compatible" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <!-- Optional Bootstrap theme 
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      rel="stylesheet" />-->
+    <!-- Custom CSS -->
+    <link
+      href="style/custom.css"
+      rel="stylesheet" />
+    <!-- For mobile -->
+    <meta
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+      name="viewport" />
+    <!-- Model 1 -->
+    <model
+      id="app-model"
+      xmlns="http://www.w3.org/2002/xforms">
+      <instance>
+        <data
+          xmlns=""/>
+      </instance>
+    </model>
+    <!-- Model 2 -->
+    <model
+      id="test-model"
+      xmlns="http://www.w3.org/2002/xforms">
+      <instance>
+        <data
+          xmlns="">
+          <refresh/>
+          <tests>
+            <test>1</test>
+            <test>2</test>
+            <test>3</test>
+          </tests>
+        </data>
+      </instance>
+      <action
+        ev:event="xforms-model-construct-done">
+        <!-- Custom event -->
+        <dispatch
+          name="run-test"
+          targetid="test-group"/>
+      </action>
+    </model>
+  </head>
+  <body>
+    <div>
+      <!-- Listener -->
+      <group
+        id="test-group"
+        xmlns="http://www.w3.org/2002/xforms">
+        <h:p>When the form is loaded, three successive alerts should appear
+          (with the numbers 1, 2, 3).</h:p>
+        <!-- Handler -->
+        <message
+          ev:event="run-test"
+          iterate="tests/test"
+          model="test-model">
+          <output
+            value="."/>
+        </message>
+      </group>
+    </div>
+    <!--Compiled and minified jQuery JavaScript -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <!-- Compiled and minified Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- Custom JavaScript -->
+    <script src="custom.js" type="text/javascript"></script>
+  </body>
+</html>
