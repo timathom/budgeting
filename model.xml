@@ -122,17 +122,16 @@
   </instance>
   <!-- Data bindings -->
   <bind
-    ref="instance('test-suite')/scenario/test">
+    ref="instance('test-suite')/scenario/test"
+    relevant="../@skip = false()">
     <bind
       ref="@passed"
       type="boolean"/>
     <bind
-      ref="result"
-      relevant="../@skip = false()"
+      ref="result"     
       type="normalizedString"/>
     <bind
-      ref="expected"
-      relevant="../@skip = false()"
+      ref="expected"      
       type="normalizedString"/>
   </bind>
   <bind
@@ -150,8 +149,8 @@
       targetid="subform"/>
     <dispatch
       if="instance('test-suite')/status/@testing = true()"
-      name="perform-test"
-      targetid="test-runner"/>    
+      name="run-test"
+      targetid="test-runner"/>
   </action>
   <!-- Submissions -->
   <submission

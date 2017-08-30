@@ -44,7 +44,7 @@
     id="test-runner"
     ref="instance('test-suite')/scenario">
     <action
-      ev:event="perform-test"
+      ev:event="run-test"
       iterate="test">
       <action
         if="@name = 'login-form-displayed">
