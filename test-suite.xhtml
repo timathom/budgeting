@@ -20,10 +20,10 @@
     <link
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
       rel="stylesheet" />
-    <!-- Optional Bootstrap theme -->
+    <!-- Optional Bootstrap theme 
     <link
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
-      rel="stylesheet" />
+      rel="stylesheet" />-->
     <!-- Custom CSS -->
     <link
       href="style/custom.css"
@@ -33,7 +33,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no"
       name="viewport" />
     <model
-      id="app"
+      id="app-model"
       xmlns="http://www.w3.org/2002/xforms">
       <instance>
         <data
@@ -41,9 +41,9 @@
       </instance>
     </model>
     <model
-      id="test"
+      id="test-model"
       xmlns="http://www.w3.org/2002/xforms">
-      <instance id="test-suite">
+      <instance>
         <data
           xmlns="">
           <refresh/>
@@ -56,47 +56,24 @@
       </instance>
       <action
         ev:event="xforms-model-construct-done">
-        <send
-          submission="refresh-test-model"/>
-      </action>
-      <submission
-        id="refresh-test-model"
-        instance="test-suite"
-        method="get"
-        replace="text"
-        resource="javascript:true"
-        serialization="none"
-        targetref="refresh">
         <dispatch
-          ev:event="xforms-submit-done"
           name="run-test"
-          targetid="test-runner"/>
-        <message
-          ev:event="xforms-submit-error">
-          <output
-            value="concat('A submission error (', event('error-type'), ') occurred')"/>
-        </message>
-      </submission>
+          targetid="test-group"/>
+      </action>
     </model>
   </head>
   <body>
     <div>
       <group
+        id="test-group"
         xmlns="http://www.w3.org/2002/xforms">
-
-        <group
-          id="test-runner">
-
-          <message
-            ev:event="run-test"
-            iterate="tests/test"
-            model="test">
-            <output
-              value="."/>
-          </message>
-
-        </group>
-
+        <message
+          ev:event="run-test"
+          iterate="tests/test"
+          model="test-model">
+          <output
+            value="."/>
+        </message>
       </group>
     </div>
     <!--Compiled and minified jQuery JavaScript -->
