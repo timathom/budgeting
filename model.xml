@@ -74,6 +74,7 @@
         loaded="false"
         saved="false"
         submitted="false"/>
+      <refresh/>
     </data>
   </instance>
   <!-- HTTP results -->
@@ -91,47 +92,69 @@
       xmlns="">
       <status
         testing="true"/>
-      <scenario
-        label="when the page loads">
-        <test
-          end=""
-          label="the login form should be displayed"
-          level="view"
-          name="login-form-displayed"
-          passed=""
-          skip="false"
-          start="">
-          <result/>
-          <expected>true</expected>
-        </test>
-        <test
-          end=""
-          label="the login form should be enabled"
-          level="view"
-          name="login-form-enabled"
-          passed=""
-          skip="false"
-          start="">
-          <result/>
-          <expected>Tester</expected>
-        </test>
-      </scenario>
       <inner-html/>
       <input-value/>
+      <scenarios>
+        <scenario
+          label="when the page loads">
+          <test
+            end=""
+            label="the login form should be displayed"
+            level="view"
+            name="login-form-displayed"
+            passed=""
+            skip="false"
+            start="">
+            <result/>
+            <expected>true</expected>
+          </test>
+          <test
+            end=""
+            label="the rest of the form should be hidden"
+            level="view"
+            name="rest-of-form-hidden"
+            passed=""
+            skip="false"
+            start="">
+            <result/>
+            <expected>false</expected>
+          </test>
+        </scenario>
+        <scenario
+          label="when data is input into the login form">
+          <test
+            end=""
+            label="values in the login form should update in response to autocorrect or saved login credentials"
+            level="model"
+            name="login-form-enabled"
+            passed=""
+            skip="false"
+            start="">
+            <result/>
+            <expected>Tester</expected>
+          </test>
+        </scenario>
+      </scenarios>
+      <mocks>
+        <mock
+          instance="login">
+          <user>Tester</user>
+        </mock>
+      </mocks>
     </data>
   </instance>
   <!-- Data bindings -->
   <bind
-    ref="instance('test-suite')/scenario/test"
-    relevant="../@skip = false()">
+    ref="instance('test-suite')/scenarios/scenario/test"
+    relevant="@skip = false()">
     <bind
       ref="@passed"
       type="boolean"/>
     <bind
-      ref="result"     
+      ref="result"
       type="normalizedString"/>
     <bind
-      ref="expected"      
+      ref="expected"
       type="normalizedString"/>
   </bind>
   <bind
@@ -154,13 +177,13 @@
   </action>
   <!-- Submissions -->
   <submission
-    id="get-input-value"
-    instance="test-suite"
+    id="refresh"
+    instance="state"
     method="get"
     replace="text"
-    resource="javascript:getInputValue('user-login')"
+    resource="javascript:true"
     serialization="none"
-    targetref="input-value">
+    targetref="refresh">
     <message
       ev:event="xforms-submit-error">
       <output
@@ -176,6 +199,6 @@
     resource="/parse"
     targetref="inner-html">
     <action
-      ev:event="xforms-submit-done"> </action>
+      ev:event="xforms-submit-done"/>
   </submission>
 </model>

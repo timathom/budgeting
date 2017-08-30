@@ -8,7 +8,7 @@
   <!-- Scenarios -->
   <repeat
     id="scenario-repeat"
-    ref="scenario">
+    ref="scenarios/scenario">
     <var
       name="s"
       value="count(. | preceding-sibling::scenario)"/>
@@ -16,7 +16,7 @@
       <label>
         <output
           value="concat($s, '. ', @label)"/>
-      </label>      
+      </label>
       <repeat
         id="test-repeat"
         ref="test">
@@ -42,27 +42,39 @@
   <!-- Test runner -->
   <group
     id="test-runner"
-    ref="instance('test-suite')/scenario">
+    ref="instance('test-suite')/scenarios">
     <action
       ev:event="run-test"
-      iterate="test">
-      <action
-        if="@name = 'login-form-displayed">
-        <setvalue
-          ref="result"
-          value="assertDisplayed('user-login')"/>
-      </action>
+      iterate="scenario/test">
+      <!-- Test 1.1 -->
+      <setvalue
+        ref="result[../@name = 'login-form-displayed']"
+        value="assertDisplayed('user-login')"/>
+      <!-- Test 1.2 -->
+      <setvalue
+        ref="result[../@name = 'rest-of-form-hidden']"
+        value="assertDisplayed('hide-login')"/>
+      <!-- Test 2.1 -->
       <action
         if="@name = 'login-form-enabled'">
-        <setvalue
-          ref="instance('login')/login/user"
-          value="'Tester'"/>        
+        <delete
+          at="1"
+          ref="instance('login')/login/user"/>
+        <insert
+          at="1"
+          context="instance('login')/login"
+          origin="instance('test-suite')/mocks/mock[@instance = 'login']/user"
+          position="before"
+          ref="*"/>
+        <!-- Only a submit action seems to update the input value in the view -->
         <send
-          submission="get-input-value"/>
+          submission="refresh"/>
         <setvalue
           ref="result"
           value="getInputValue('user-login')"/>
       </action>
+      <!-- Test -->
+      
       <setvalue
         ref="@passed"
         value="../result = ../expected"/>
