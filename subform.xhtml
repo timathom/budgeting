@@ -4,6 +4,7 @@
 <html
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:xf="http://www.w3.org/2002/xforms"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -16,24 +17,31 @@
         <data
           xmlns=""/>
       </instance>
-      <action
-        ev:event="xforms-subform-ready">
-        <dispatch
-          name="perform-test"
-          targetid="t1"/>
-      </action>
     </model>
   </head>
   <body>
     <div
       class="container-fluid">
-      <h1>In testing...</h1>
+      <h1>Testing...</h1>
       <switch
+        ref="instance('login')/login"
         xmlns="http://www.w3.org/2002/xforms">
         <case
-          id="show-login"/>
+          id="show-login"
+          selected="true">
+          <h:h2>Visible</h:h2>
+          <label>Login</label>
+          <!-- Username -->
+          <input
+            id="user-login"
+            ref="user">
+            <label>Username</label>
+          </input>
+        </case>
         <case
-          id="hide-login"/>
+          id="hide-login">
+          <h:h2>Hidden</h:h2>
+        </case>
         <case
           id="load-list"/>
       </switch>

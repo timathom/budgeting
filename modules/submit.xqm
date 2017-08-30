@@ -79,10 +79,10 @@ function submit:load-lists-from-db(
 };
 
 declare
-%rest:path("/echo")
+%rest:path("/parse")
 %rest:POST("{$data}")
-function submit:echo(
+function submit:parse(
   $data as item()*
 ) as item()* {
-  <response>{html:parse($data)}</response>
+  <innerHTML>{html:parse($data)/html/body/div[@id = "subform"]}</innerHTML>
 };

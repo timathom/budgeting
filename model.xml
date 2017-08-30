@@ -29,8 +29,7 @@
       </groceries>
     </data>
   </instance>
-  <!-- / -->
-  <!-- List IDs -->
+  <!-- Lists -->
   <instance
     id="lists">
     <data
@@ -39,7 +38,6 @@
       <lists/>
     </data>
   </instance>
-  <!-- / -->
   <!-- Templates -->
   <instance
     id="proto">
@@ -55,20 +53,18 @@
       </item>
     </data>
   </instance>
-  <!-- / -->
   <!-- Login -->
   <instance
     id="login">
     <data
       xmlns="">
       <login>
-        <user>admin</user>
+        <user/>
         <password
           digest=""/>
       </login>
     </data>
   </instance>
-  <!-- / -->
   <!-- Application state -->
   <instance
     id="state">
@@ -88,37 +84,99 @@
       <response/>
     </data>
   </instance>
-  <!-- / -->
-  <!-- Expect -->
+  <!-- Test suite -->
   <instance
-    id="expect">
+    id="test-suite">
     <data
       xmlns="">
-      <test
-        passed="">
-        <actual/>
-        <expected>true</expected>
-      </test>
+      <status
+        testing="true"/>
+      <scenario
+        label="when the page loads">
+        <test
+          end=""
+          label="the login form should be displayed"
+          level="view"
+          name="login-form-displayed"
+          passed=""
+          skip="false"
+          start="">
+          <result/>
+          <expected>true</expected>
+        </test>
+        <test
+          end=""
+          label="the login form should be enabled"
+          level="view"
+          name="login-form-enabled"
+          passed=""
+          skip="false"
+          start="">
+          <result/>
+          <expected>Tester</expected>
+        </test>
+      </scenario>
+      <inner-html/>
+      <input-value/>
     </data>
   </instance>
-  <!-- / -->
+  <!-- Data bindings -->
   <bind
-    ref="instance('expect')/test">
+    ref="instance('test-suite')/scenario/test">
     <bind
       ref="@passed"
       type="boolean"/>
     <bind
-      ref="actual"
-      type="boolean"/>
+      ref="result"
+      relevant="../@skip = false()"
+      type="normalizedString"/>
     <bind
       ref="expected"
-      type="boolean"/>
+      relevant="../@skip = false()"
+      type="normalizedString"/>
   </bind>
+  <bind
+    ref="instance('login')/login">
+    <bind
+      ref="user"
+      type="normalizedString"/>
+  </bind>
+  <!-- Model actions -->
   <action
     ev:event="xforms-model-construct-done">
     <load
       resource="subform.xhtml"
       show="embed"
       targetid="subform"/>
-  </action>  
+    <dispatch
+      if="instance('test-suite')/status/@testing = true()"
+      name="perform-test"
+      targetid="test-runner"/>    
+  </action>
+  <!-- Submissions -->
+  <submission
+    id="get-input-value"
+    instance="test-suite"
+    method="get"
+    replace="text"
+    resource="javascript:getInputValue('user-login')"
+    serialization="none"
+    targetref="input-value">
+    <message
+      ev:event="xforms-submit-error">
+      <output
+        value="concat('A submission error (', event('error-type'), ') occurred')"/>
+    </message>
+  </submission>
+  <submission
+    id="parse"
+    instance="test-suite"
+    method="post"
+    ref="instance('test-suite')/inner-html"
+    replace="instance"
+    resource="/parse"
+    targetref="inner-html">
+    <action
+      ev:event="xforms-submit-done"> </action>
+  </submission>
 </model>
