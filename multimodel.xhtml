@@ -70,13 +70,15 @@
       <!-- Listener -->
       <group
         id="test-group"
+        model="test-model"
+        ref="tests"
         xmlns="http://www.w3.org/2002/xforms">
         <h:p>When the form is loaded, three successive alerts should appear
           (with the numbers 1, 2, 3).</h:p>
         <!-- Handler -->
         <message
           ev:event="run-test"
-          iterate="tests/test"
+          iterate="test"
           model="test-model">
           <output
             value="."/>
