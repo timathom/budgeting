@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <group
   id="suite"
-  ref="instance('test-suite')"
+  model="test"
+  ref="scenarios"
   xmlns="http://www.w3.org/2002/xforms"
   xmlns:ev="http://www.w3.org/2001/xml-events">
   <label>Suite</label>
   <!-- Scenarios -->
   <repeat
     id="scenario-repeat"
-    ref="scenarios/scenario">
+    ref="scenario">
     <var
       name="s"
       value="count(. | preceding-sibling::scenario)"/>
@@ -23,8 +24,7 @@
         <var
           name="t"
           value="count(. | preceding-sibling::test)"/>
-        <group
-          ref=".">
+        <group>
           <label>
             <output
               value="concat($s, '.', $t, ' ', @label)"/>
@@ -42,39 +42,52 @@
   <!-- Test runner -->
   <group
     id="test-runner"
-    ref="instance('test-suite')/scenarios">
+    model="test"
+    ref="scenarios">
     <action
       ev:event="run-test"
       iterate="scenario/test">
+      <message>
+        <output
+          value="@name"/>
+      </message>
       <!-- Test 1.1 -->
-      <setvalue
-        ref="result[../@name = 'login-form-displayed']"
-        value="assertDisplayed('user-login')"/>
+      <action
+        if="@name = 'login-form-displayed'">
+        <setvalue
+          ref="result"
+          value="assertDisplayed('user-login')"/>
+      </action>
       <!-- Test 1.2 -->
-      <setvalue
-        ref="result[../@name = 'rest-of-form-hidden']"
-        value="assertDisplayed('hide-login')"/>
+      <action
+        if="@name = 'rest-of-form-hidden'">
+        <setvalue
+          ref="result"
+          value="assertDisplayed('hide-login')"/>
+      </action>
       <!-- Test 2.1 -->
       <action
         if="@name = 'login-form-enabled'">
         <delete
           at="1"
+          model="app"
           ref="instance('login')/login/user"/>
         <insert
           at="1"
           context="instance('login')/login"
-          origin="instance('test-suite')/mocks/mock[@instance = 'login']/user"
+          model="app"
+          origin="instance('proto')/login/user"
           position="before"
           ref="*"/>
         <!-- Only a submit action seems to update the input value in the view -->
         <send
-          submission="refresh"/>
+          submission="refresh-test-model"/>
         <setvalue
           ref="result"
           value="getInputValue('user-login')"/>
       </action>
       <!-- Test -->
-      
+
       <setvalue
         ref="@passed"
         value="../result = ../expected"/>

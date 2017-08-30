@@ -11,7 +11,6 @@
   <head>
     <title>Grocery list</title>
     <model
-      id="subform-default"
       xmlns="http://www.w3.org/2002/xforms">
       <instance>
         <data
@@ -24,6 +23,7 @@
       class="container-fluid">
       <h1>Testing...</h1>
       <switch
+        model="app"
         ref="instance('login')/login"
         xmlns="http://www.w3.org/2002/xforms">
         <case

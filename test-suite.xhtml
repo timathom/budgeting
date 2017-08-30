@@ -1,23 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="xsltforms/build/xsltforms.xsl" type="text/xsl"?>
-<?xsltforms-options debug="no"?>
+<?xsltforms-options debug="yes"?>
 <?css-conversion no?>
-<?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl"
-    schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
 <html
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:ev="http://www.w3.org/2001/xml-events"
+  xmlns:h="http://www.w3.org/1999/xhtml"
   xmlns:xf="http://www.w3.org/2002/xforms"
   xmlns:xi="http://www.w3.7org/2001/XInclude"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <head>
-    <title>Test suite</title>
-    <xi:include
-      href=".xml"
-      xmlns:xi="http://www.w3.org/2001/XInclude"/>
+    <title>XForms test suite</title>
+    <!-- Force IE Edge -->
+    <meta
+      content="IE=edge"
+      http-equiv="X-UA-Compatible" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <!-- Optional Bootstrap theme -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link
+      href="style/custom.css"
+      rel="stylesheet" />
+    <!-- For mobile -->
+    <meta
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+      name="viewport" />
+    <model
+      id="app"
+      xmlns="http://www.w3.org/2002/xforms">
+      <instance>
+        <data
+          xmlns=""/>
+      </instance>
+    </model>
+    <model
+      id="test"
+      xmlns="http://www.w3.org/2002/xforms">
+      <instance id="test-suite">
+        <data
+          xmlns="">
+          <refresh/>
+          <tests>
+            <test>1</test>
+            <test>2</test>
+            <test>3</test>
+          </tests>
+        </data>
+      </instance>
+      <action
+        ev:event="xforms-model-construct-done">
+        <send
+          submission="refresh-test-model"/>
+      </action>
+      <submission
+        id="refresh-test-model"
+        instance="test-suite"
+        method="get"
+        replace="text"
+        resource="javascript:true"
+        serialization="none"
+        targetref="refresh">
+        <dispatch
+          ev:event="xforms-submit-done"
+          name="run-test"
+          targetid="test-runner"/>
+        <message
+          ev:event="xforms-submit-error">
+          <output
+            value="concat('A submission error (', event('error-type'), ') occurred')"/>
+        </message>
+      </submission>
+    </model>
   </head>
   <body>
-    
+    <div>
+      <group
+        xmlns="http://www.w3.org/2002/xforms">
+
+        <group
+          id="test-runner">
+
+          <message
+            ev:event="run-test"
+            iterate="tests/test"
+            model="test">
+            <output
+              value="."/>
+          </message>
+
+        </group>
+
+      </group>
+    </div>
+    <!--Compiled and minified jQuery JavaScript -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <!-- Compiled and minified Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- Custom JavaScript -->
+    <script src="custom.js" type="text/javascript"></script>
   </body>
 </html>
