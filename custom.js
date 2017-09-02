@@ -18,3 +18,26 @@ function getInputValue(id) {
     return err.toString()
   }
 }
+
+
+var errorCatcher =[];
+
+/*
+window.addEventListener("error", function (msg, url, lineNo, columnNo, error) {
+try {
+errorCatcher.push(msg);
+}
+catch(err) {
+errorCatcher.push(err.message);
+}
+});
+ */
+
+try {
+  window.alert = function (message) {
+    errorCatcher.push(message);
+  };
+}
+catch (err) {
+  errorCatcher.push(err.message);
+}

@@ -87,7 +87,7 @@
           value="getInputValue('user-login')"/>
       </action>
       <!-- Test -->
-
+>
       <setvalue
         ref="@passed"
         value="../result = ../expected"/>

@@ -32,39 +32,35 @@
     <meta
       content="width=device-width, initial-scale=1.0, user-scalable=no"
       name="viewport" />
+    <script type="text/javascript">
+      <![CDATA[
+//]]>
+    </script>
     <model
       id="app"
       xmlns="http://www.w3.org/2002/xforms">
       <instance>
         <data
-          xmlns=""/>
-      </instance>
-    </model>
-    <model
-      id="test"
-      xmlns="http://www.w3.org/2002/xforms">
-      <instance id="test-suite">
-        <data
           xmlns="">
-          <refresh/>
-          <tests>
-            <test>1</test>
-            <test>2</test>
-            <test>3</test>
-          </tests>
+          <errors/>
         </data>
       </instance>
+      <bind
+        calculate="js-eval('errorCatcher')"
+        ref="errors"/>
       <action
         ev:event="xforms-model-construct-done">
         <send
           submission="refresh-test-model"/>
+        <recalculate
+          model="app"/>
       </action>
       <submission
         id="refresh-test-model"
         instance="test-suite"
         method="get"
         replace="text"
-        resource="javascript:true"
+        resource="javascript:"
         serialization="none"
         targetref="refresh">
         <dispatch
@@ -78,11 +74,53 @@
         </message>
       </submission>
     </model>
+    <model
+      id="test"
+      xmlns="http://www.w3.org/2002/xforms">
+      <instance
+        id="test-suite">
+        <data
+          xmlns="">
+          <refresh/>
+          <tests>
+            <test>1</test>
+            <test>2</test>
+            <test>3</test>
+          </tests>
+        </data>
+      </instance>
+
+    </model>
+
   </head>
   <body>
     <div>
       <group
         xmlns="http://www.w3.org/2002/xforms">
+
+
+        <output
+          model="app"
+          value="errors"/>
+
+
+        <trigger>
+          <label>Test</label>
+          <action
+            ev:event="DOMActivate">
+            <setvalue
+              model="app"
+              ref="errors"
+              value="js-eval('errorCatcher')"/>
+            <message>
+              <output
+                value="'Testing...'"/>
+            </message>
+          </action>
+        </trigger>
+
+
+
 
         <group
           id="test-runner">
