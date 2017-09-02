@@ -32,46 +32,20 @@
     <meta
       content="width=device-width, initial-scale=1.0, user-scalable=no"
       name="viewport" />
-    <script type="text/javascript">
-      <![CDATA[
-//]]>
-    </script>
+    <!-- Model 1 -->
     <model
       id="app-model"
       xmlns="http://www.w3.org/2002/xforms">
       <instance>
         <data
-          xmlns="">
-          <errors/>
-        </data>
+          xmlns=""/>
       </instance>
-      <bind
-        calculate="js-eval('errorCatcher')"
-        ref="errors"/>
-      <action
-        ev:event="xforms-model-construct-done">
-        <send
-          submission="refresh-test-model"/>
-        <recalculate
-          model="app"/>
-      </action>
-
-      <submission
-        id="refresh-test-model"
-        instance="test-suite"
-        method="get"
-        replace="text"
-        resource="javascript:"
-        serialization="none"
-        targetref="refresh"/>
-
     </model>
-
+    <!-- Model 2 -->
     <model
-      id="test"
+      id="test-model"
       xmlns="http://www.w3.org/2002/xforms">
-      <instance
-        id="test-suite">
+      <instance>
         <data
           xmlns="">
           <refresh/>
@@ -82,54 +56,31 @@
           </tests>
         </data>
       </instance>
-
+      <action
+        ev:event="xforms-model-construct-done">
+        <!-- Custom event -->
+        <dispatch
+          name="run-test"
+          targetid="test-group"/>
+      </action>
     </model>
-
   </head>
   <body>
     <div>
+      <!-- Listener -->
       <group
         id="test-group"
         xmlns="http://www.w3.org/2002/xforms">
-
-
-
-        <output
-          model="app"
-          value="errors"/>
-
-
-        <trigger>
-          <label>Test</label>
-          <action
-            ev:event="DOMActivate">
-            <setvalue
-              model="app"
-              ref="errors"
-              value="js-eval('errorCatcher')"/>
-            <message>
-              <output
-                value="'Testing...'"/>
-            </message>
-          </action>
-        </trigger>
-
-
-
-
-        <group
-          id="test-runner">
-
-          <message
-            ev:event="run-test"
-            iterate="tests/test"
-            model="test">
-            <output
-              value="."/>
-          </message>
-
-        </group>
-
+        <h:p>When the form is loaded, three successive alerts should appear
+          (with the numbers 1, 2, 3).</h:p>
+        <!-- Handler -->
+        <message
+          ev:event="run-test"
+          iterate="tests/test"
+          model="test-model">
+          <output
+            value="."/>
+        </message>
       </group>
     </div>
     <!--Compiled and minified jQuery JavaScript -->
